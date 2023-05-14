@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ezAir</string>
+    <string name="bikeName" />
+    <string name="pressure">-.--</string>
 </resources>
