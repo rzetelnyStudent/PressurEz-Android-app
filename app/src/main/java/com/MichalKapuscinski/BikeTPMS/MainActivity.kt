@@ -111,21 +111,16 @@ class MainActivity : AppCompatActivity() {
         alertDialog?.show()
     }
 
+    val sensor = Sensor()
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Log.d(TAG, "Ranged: ${beacons.count()} beacons")
         if (BeaconManager.getInstanceForApplication(this).rangedRegions.size > 0) {
             beaconCountTextView.text = "Ranging enabled: ${beacons.count()} beacon(s) detected"
             for (beacon in beacons) {
-                var advData = beacon.getDataFields()
-                val buffer = ByteBuffer.allocate(4)
-                buffer.putInt(advData[0].toInt())
-                val flippedBuffer = buffer.order(ByteOrder.LITTLE_ENDIAN)
-                buffer.flip()
-                val flippedLong = buffer.getInt()
-
-                for (byte in advData) {
-                    Log.d("Moje", byte.toString())
-                }
+                val a = beacon.getDataFields()
+                val b = beacon.getExtraDataFields()
+                val c = 0
+                sensor.updateMeasurementFromAdvData(beacon.getDataFields())
             }
 
             beaconListView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,

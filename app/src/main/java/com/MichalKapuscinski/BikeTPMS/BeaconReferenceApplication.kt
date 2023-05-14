@@ -20,7 +20,7 @@ class BeaconReferenceApplication: Application() {
 
         // If you don't care about AltBeacon, you can clear it from the defaults:
         beaconManager.getBeaconParsers().clear()
-        val beaconParser = BeaconParser().setBeaconLayout("m:3-4=eaca,i:5-5,i:6-6,i:7-7,p:2-2,d:12-15")
+        val beaconParser = BeaconParser().setBeaconLayout("m:3-4=eaca,i:5-5,i:6-6,i:7-7,p:2-2,d:8-11,d:12-15,d:16-16,d:17-17")
         beaconParser.setHardwareAssistManufacturerCodes(intArrayOf(0x0100))
         beaconManager.getBeaconParsers().add(beaconParser)   // has to contain 3 ids otherwise an exception is thrown
 
