@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         populateBikes()
         //val mainActivity = this
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(applicationContext, 3)
+            layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = CardAdapter(bikeList)
         }
 
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             stateString == "outside"
            // beaconCountTextView.text = "Outside of the beacon region -- no beacons detected"
           //  beaconListView.adapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
+          //      ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
         } else {
            // beaconCountTextView.text = "Inside the beacon region."
         }
@@ -192,6 +192,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_bike,
             "Zimówka",
             1233,
+            234
         )
         bikeList.add(bike1)
 
@@ -199,6 +200,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_bike,
             "MTB",
             4333,
+            234
         )
         bikeList.add(bike2)
 
@@ -206,6 +208,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_bike,
             "Szosa",
             34245,
+            234
         )
         bikeList.add(bike3)
     }

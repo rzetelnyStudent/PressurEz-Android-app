@@ -9,6 +9,8 @@ class CardViewHolder(
     fun bindBike(bike: Bike) {
         cardCellBinding.bikeIcon.setImageResource(bike.appearance)
         cardCellBinding.bikeName.text = bike.name
-        cardCellBinding.pressure.text = bike.pressure.toString()
+        cardCellBinding.pressureFront.text = bike.pressure.toString()
+        cardCellBinding.temperatureFront.text = bike.pressure.toString()
+        cardCellBinding.batteryFront.text = bike.pressure.toString()
     }
 }

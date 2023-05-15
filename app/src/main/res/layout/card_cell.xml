@@ -14,41 +14,186 @@
         android:clickable="true"
         app:cardElevation="7dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <ImageButton
+                android:id="@+id/bikeEditBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/white"
+                android:src="@drawable/ic_edit" />
+            <TextView
+                android:id="@+id/pressureRear"
+                android:paddingLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/bikeEditBtn"
+                android:text="@string/pressure_no_reading"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:lines="1" />
+            <TextView
+                android:id="@+id/pressureUnitRear"
+                android:paddingLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/pressureRear"
+                android:layout_alignBottom="@id/pressureRear"
+                android:text="@string/pressure_unit"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:lines="1" />
+            <TextView
+                android:id="@+id/temperatureRear"
+                android:paddingLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/pressureRear"
+                android:text="@string/temp_no_reading"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/temperatureUnitRear"
+                android:paddingLeft="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/temperatureRear"
+                android:layout_alignBottom="@id/temperatureRear"
+                android:text="@string/temp_unit"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/batteryRear"
+                android:paddingLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/temperatureRear"
+                android:text="@string/bat_no_reading"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/batteryUnitRear"
+                android:paddingLeft="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/batteryRear"
+                android:layout_alignBottom="@id/batteryRear"
+                android:text="@string/bat_unit"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/bike_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/bike_name_default"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:lines="1"/>
 
             <ImageView
                 android:id="@+id/bike_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/bike_name"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_bike"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/bikeName"/>
+                android:lines="1"/>
+
 
             <TextView
-                android:id="@+id/bike_name"
-                android:layout_width="match_parent"
+                android:id="@+id/pressureFront"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/bikeName"
+                android:layout_toLeftOf="@id/pressureUnitFront"
+                android:layout_below="@id/bikeEditBtn"
+                android:text="@string/pressure_no_reading"
                 android:textColor="@color/black"
-                android:textSize="15sp"
-                android:lines="1"
-                android:textStyle="bold"/>
-
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:lines="1" />
             <TextView
-                android:id="@+id/pressure"
-                android:layout_width="match_parent"
+                android:id="@+id/pressureUnitFront"
+                android:paddingRight="24dp"
+                android:paddingLeft="4dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/pressure"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/pressureFront"
+                android:text="@string/pressure_unit"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:lines="1" />
+            <TextView
+                android:id="@+id/temperatureFront"
+                android:layout_alignLeft="@id/pressureFront"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pressureFront"
+                android:text="@string/temp_no_reading"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 android:lines="1" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/temperatureUnitFront"
+                android:paddingLeft="2dp"
+                android:paddingRight="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/temperatureFront"
+                android:layout_toRightOf="@id/temperatureFront"
+                android:text="@string/temp_unit"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/batteryFront"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/pressureFront"
+                android:layout_below="@id/temperatureFront"
+                android:text="@string/bat_no_reading"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/batteryUnitFront"
+                android:paddingLeft="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/batteryFront"
+                android:layout_alignBottom="@id/batteryFront"
+                android:text="@string/bat_unit"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:lines="1" />
+
+        </RelativeLayout>
+
 
     </androidx.cardview.widget.CardView>
 
