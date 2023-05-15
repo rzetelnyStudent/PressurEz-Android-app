@@ -6,7 +6,7 @@ class Bike (
 
     var appearance: Int,
     var name: String,
-    var pressure: Int,
-    var battery: Int,
+    var sensorFront: Sensor,
+    var sensorRear: Sensor,
     val id: Int? = bikeList.size
 )

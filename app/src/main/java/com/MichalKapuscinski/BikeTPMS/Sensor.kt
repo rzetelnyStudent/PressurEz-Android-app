@@ -5,17 +5,18 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 
-class Sensor {
+class Sensor (id: Int = 0, pressureBar: Int = 0, temperatureC: Int = 0, battery: Byte = 0, leakAlert: Boolean = false) {
 
     private val PRESSURE_POS = 17
     private val TEMP_POS = 21
     private val BAT_POS = 25
     private val LEAK_FLAG_POS = 26
 
-    private var pressureBar: Int = 0
-    private var temperatureC: Int = 0
-    private var battery: Byte = 0
-    private var leakAlert: Boolean = false
+    var id: Int = 0
+    var pressureBar: Int = 0
+    var temperatureC: Int = 0
+    var battery: Byte = 0
+    var leakAlert: Boolean = false
 
     public fun updateMeasurementFromAdvData(advData: List<Long>) {
         pressureBar = decodeInt(advData[0].toInt())

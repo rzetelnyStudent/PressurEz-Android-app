@@ -9,10 +9,10 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="15dp"
+        app:cardCornerRadius="16dp"
         android:layout_margin="10dp"
         android:clickable="true"
-        app:cardElevation="7dp">
+        app:cardElevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,7 +29,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:background="@color/white"
-                android:src="@drawable/ic_edit" />
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/editbtn" />
             <TextView
                 android:id="@+id/pressureRear"
                 android:paddingLeft="24dp"
@@ -109,13 +110,14 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/bike_name_default"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:lines="1"/>
 
             <ImageView
                 android:id="@+id/bike_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:paddingTop="20dp"
+                android:layout_height="60dp"
                 android:layout_below="@id/bike_name"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_bike"

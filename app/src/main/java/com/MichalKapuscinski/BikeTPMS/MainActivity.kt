@@ -36,7 +36,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var beaconReferenceApplication: BeaconReferenceApplication
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
-
+    lateinit var myBikeListAdapter: CardAdapter
+    lateinit var bike1: Bike
+    var sensorRear = Sensor(1)
+    var sensorFront = Sensor(1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -45,13 +48,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         populateBikes()
         //val mainActivity = this
+        //var myBikeListAdapter = CardAdapter(bikeList)
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = CardAdapter(bikeList)
         }
 
         beaconReferenceApplication = application as BeaconReferenceApplication
-
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
             .getRegionViewModel(beaconReferenceApplication.region)
@@ -123,7 +126,6 @@ class MainActivity : AppCompatActivity() {
         alertDialog?.show()
     }
 
-    val sensor = Sensor()
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Log.d(TAG, "Ranged: ${beacons.count()} beacons")
         if (BeaconManager.getInstanceForApplication(this).rangedRegions.size > 0) {
@@ -132,7 +134,10 @@ class MainActivity : AppCompatActivity() {
                 val a = beacon.getDataFields()
                 val b = beacon.getExtraDataFields()
                 val c = 0
-                sensor.updateMeasurementFromAdvData(beacon.getDataFields())
+                sensorFront.updateMeasurementFromAdvData(beacon.getDataFields())
+                sensorRear.updateMeasurementFromAdvData(beacon.getDataFields())
+
+                //myBikeListAdapter.notifyDataSetChanged()
             }
 
            // beaconListView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
@@ -188,29 +193,19 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     private fun populateBikes() {
-        val bike1 = Bike(
+
+        bike1 = Bike(
             R.drawable.ic_bike,
             "Zimówka",
-            1233,
-            234
+            sensorFront,
+            sensorRear
         )
         bikeList.add(bike1)
 
-        val bike2 = Bike(
-            R.drawable.ic_bike,
-            "MTB",
-            4333,
-            234
-        )
-        bikeList.add(bike2)
+    }
 
-        val bike3 = Bike(
-            R.drawable.ic_bike,
-            "Szosa",
-            34245,
-            234
-        )
-        bikeList.add(bike3)
+    private fun updateBikes() {
+
     }
 
 

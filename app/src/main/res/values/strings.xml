@@ -7,4 +7,5 @@
     <string name="pressure_unit">bar</string>
     <string name="temp_unit">°C</string>
     <string name="bat_unit">%</string>
+    <string name="editbtn">editBtn</string>
 </resources>
