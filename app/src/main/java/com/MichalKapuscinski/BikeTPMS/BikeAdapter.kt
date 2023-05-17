@@ -19,4 +19,5 @@ class CardAdapter(private val bikes: List<Bike>): RecyclerView.Adapter<CardViewH
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         holder.bindBike(bikes[position])
     }
+
 }

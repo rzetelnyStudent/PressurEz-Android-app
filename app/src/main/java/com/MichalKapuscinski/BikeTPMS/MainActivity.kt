@@ -48,10 +48,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         populateBikes()
         //val mainActivity = this
-        //var myBikeListAdapter = CardAdapter(bikeList)
+        myBikeListAdapter = CardAdapter(bikeList)
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
-            adapter = CardAdapter(bikeList)
+            adapter = myBikeListAdapter
         }
 
         beaconReferenceApplication = application as BeaconReferenceApplication
@@ -136,8 +136,9 @@ class MainActivity : AppCompatActivity() {
                 val c = 0
                 sensorFront.updateMeasurementFromAdvData(beacon.getDataFields())
                 sensorRear.updateMeasurementFromAdvData(beacon.getDataFields())
-
-                //myBikeListAdapter.notifyDataSetChanged()
+                //newBikeList =
+                //myBikeListAdapter.updateData(newBikeList)
+                myBikeListAdapter.notifyDataSetChanged()
             }
 
            // beaconListView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
