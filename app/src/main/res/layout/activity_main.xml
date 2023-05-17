@@ -1,45 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/beaconCount"
-        android:text="0 visible beacons:"
-        android:textAlignment="center"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-    <ListView
-        android:id="@+id/beaconList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </ListView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="0">
-        <Button
-            android:id="@+id/rangingButton"
-            android:onClick="rangingButtonTapped"
-            android:text="Disable Ranging"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1">
-        </Button>
-        <Button
-            android:id="@+id/monitoringButton"
-            android:text="Disable Monitoring"
-            android:onClick="monitoringButtonTapped"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1">
-        </Button>
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addBikeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tint="@android:color/white"
+        android:layout_margin="40dp"
+        android:foregroundTint="@color/white"
+        app:backgroundTint="@color/mint"
+        app:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

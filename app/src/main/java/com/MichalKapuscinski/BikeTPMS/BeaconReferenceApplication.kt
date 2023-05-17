@@ -12,6 +12,8 @@ import org.altbeacon.bluetooth.BluetoothMedic
 class BeaconReferenceApplication: Application() {
     lateinit var region: Region
 
+    var notificationCreated = false
+
     override fun onCreate() {
         super.onCreate()
 
@@ -65,37 +67,52 @@ class BeaconReferenceApplication: Application() {
         )
         builder.setContentIntent(pendingIntent);
         val channel =  NotificationChannel("beacon-ref-notification-id",
-            "My Notification Name", NotificationManager.IMPORTANCE_DEFAULT)
+            "", NotificationManager.IMPORTANCE_DEFAULT)
         channel.setDescription("My Notification Channel Description")
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+
         val notificationManager = getSystemService(
                 Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel);
         builder.setChannelId(channel.getId());
+
         BeaconManager.getInstanceForApplication(this).enableForegroundServiceScanning(builder.build(), 456);
     }
 
     val centralMonitoringObserver = Observer<Int> { state ->
         if (state == MonitorNotifier.OUTSIDE) {
-            Log.d(TAG, "outside beacon region: "+region)
+            Log.d("aaa", "outside beacon region: "+region)
         }
         else {
-            Log.d(TAG, "inside beacon region: "+region)
+            Log.d("aaa", "inside beacon region: "+region)
+            //when (notificationCreated) {false->sendNotification(); true->updateNotification()}
             sendNotification()
         }
     }
 
+
     val centralRangingObserver = Observer<Collection<Beacon>> { beacons ->
-        Log.d(MainActivity.TAG, "Ranged: ${beacons.count()} beacons")
+        Log.d("aaa", "Ranged: ${beacons.count()} beacons")
+        // notificationManager.notify(notificationId, builder.build())
+        //if (notificationCreated) {
+        //    updateNotification()
+        //} //else {
+        //    sendNotification()
+        //}
         for (beacon: Beacon in beacons) {
-            Log.d(TAG, "$beacon about ${beacon.distance} meters away")
+            Log.d("aaa", "$beacon about ${beacon.distance} meters away")
         }
     }
 
+    var notificationId = 0
+    var pressure = 0.0
+
     private fun sendNotification() {
         val builder = NotificationCompat.Builder(this, "beacon-ref-notification-id")
-            .setContentTitle("Beacon Reference Application")
-            .setContentText("A beacon is nearby.")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_stat_bike)
+            .setContentTitle("Zimówka")
+            .setContentText("Rear: " + "1,34" + "\t" + "Front: " + "2,45")
+            //.setPriority(NotificationCompat.PRIORITY_HIGH)
         val stackBuilder = TaskStackBuilder.create(this)
         stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
         val resultPendingIntent = stackBuilder.getPendingIntent(
@@ -103,9 +120,33 @@ class BeaconReferenceApplication: Application() {
             PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
         )
         builder.setContentIntent(resultPendingIntent)
-        val notificationManager =
-            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(1, builder.build())
+
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, builder.build())
+        notificationCreated = true
+        //with(NotificationManagerCompat.from(context)) {
+        //    notify(notificationId, builder.build())
+        //}
+    }
+
+    private fun updateNotification() {
+        pressure += 0.1
+        val builder = NotificationCompat.Builder(this, "beacon-ref-notification-id")
+            .setSmallIcon(R.drawable.ic_stat_bike)
+            .setContentTitle("Zimówka")
+            .setContentText("Rear: " + pressure.toString() + "     " + "Front: " + "2,45")
+        //.setPriority(NotificationCompat.PRIORITY_HIGH)
+        val stackBuilder = TaskStackBuilder.create(this)
+        stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
+        val resultPendingIntent = stackBuilder.getPendingIntent(
+            0,
+            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
+        )
+        builder.setContentIntent(resultPendingIntent)
+
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, builder.build())
+        notificationCreated = true
     }
 
     companion object {
