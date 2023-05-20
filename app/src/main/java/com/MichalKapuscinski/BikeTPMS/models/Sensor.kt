@@ -1,4 +1,4 @@
-package com.MichalKapuscinski.BikeTPMS
+package com.MichalKapuscinski.BikeTPMS.models
 
 import android.util.Log
 import java.nio.ByteBuffer

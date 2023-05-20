@@ -1,7 +1,8 @@
-package com.MichalKapuscinski.BikeTPMS
+package com.MichalKapuscinski.BikeTPMS.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import com.MichalKapuscinski.BikeTPMS.databinding.CardCellBinding
+import com.MichalKapuscinski.BikeTPMS.models.Bike
 
 class CardViewHolder(
     private val cardCellBinding: CardCellBinding

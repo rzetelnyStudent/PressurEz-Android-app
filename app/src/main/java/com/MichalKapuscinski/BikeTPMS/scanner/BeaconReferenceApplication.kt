@@ -1,4 +1,4 @@
-package com.MichalKapuscinski.BikeTPMS
+package com.MichalKapuscinski.BikeTPMS.scanner
 
 import android.app.*
 import android.content.Context
@@ -6,8 +6,9 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
+import com.MichalKapuscinski.BikeTPMS.MainActivity
+import com.MichalKapuscinski.BikeTPMS.R
 import org.altbeacon.beacon.*
-import org.altbeacon.bluetooth.BluetoothMedic
 
 class BeaconReferenceApplication: Application() {
     lateinit var region: Region
@@ -59,7 +60,7 @@ class BeaconReferenceApplication: Application() {
 
     fun setupForegroundService() {
         val builder = Notification.Builder(this, "BeaconReferenceApp")
-        builder.setSmallIcon(R.drawable.ic_launcher_foreground)
+        //builder.setSmallIcon(R.drawable.ic_launcher_foreground)
         builder.setContentTitle("Scanning for Beacons")
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(

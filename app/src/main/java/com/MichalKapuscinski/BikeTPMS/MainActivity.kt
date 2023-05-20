@@ -1,31 +1,22 @@
 package com.MichalKapuscinski.BikeTPMS
 
 import android.app.AlertDialog
-import android.bluetooth.BluetoothAdapter
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
+import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.models.Sensor
+import com.MichalKapuscinski.BikeTPMS.models.bikeList
+import com.MichalKapuscinski.BikeTPMS.scanner.BeaconReferenceApplication
+import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
-import org.altbeacon.beacon.BeaconParser
 import org.altbeacon.beacon.MonitorNotifier
-import org.altbeacon.beacon.Region
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.util.concurrent.Executors
 
 
 class MainActivity : AppCompatActivity() {

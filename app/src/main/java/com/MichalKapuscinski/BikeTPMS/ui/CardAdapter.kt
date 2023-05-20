@@ -1,9 +1,10 @@
-package com.MichalKapuscinski.BikeTPMS
+package com.MichalKapuscinski.BikeTPMS.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.MichalKapuscinski.BikeTPMS.databinding.CardCellBinding
+import com.MichalKapuscinski.BikeTPMS.models.Bike
 
 class CardAdapter(private val bikes: List<Bike>): RecyclerView.Adapter<CardViewHolder>()
 {

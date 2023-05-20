@@ -1,4 +1,4 @@
-package com.MichalKapuscinski.BikeTPMS
+package com.MichalKapuscinski.BikeTPMS.models
 
 var bikeList = mutableListOf<Bike>()
 
