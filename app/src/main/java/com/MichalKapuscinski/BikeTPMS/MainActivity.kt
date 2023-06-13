@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         beaconReferenceApplication = application as BeaconReferenceApplication
+        lifecycle.addObserver(beaconReferenceApplication)
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
             .getRegionViewModel(beaconReferenceApplication.region)
