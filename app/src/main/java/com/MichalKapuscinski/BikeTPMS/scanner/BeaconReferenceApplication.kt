@@ -5,20 +5,58 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.R
 import org.altbeacon.beacon.*
 
-class BeaconReferenceApplication: Application() {
+class BeaconReferenceApplication: Application(), DefaultLifecycleObserver {
     lateinit var region: Region
+    private lateinit var beaconManager: BeaconManager
 
     var notificationCreated = false
 
-    override fun onCreate() {
-        super.onCreate()
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        Log.d("aa", "onStart: $owner")
+        beaconManager.stopRangingBeacons(region)
+        beaconManager.stopMonitoring(region)
+        beaconManager.setIntentScanningStrategyEnabled(false)
+        beaconManager.setEnableScheduledScanJobs(false);
+        beaconManager.setBackgroundScanPeriod(1100);
+        beaconManager.setBackgroundBetweenScanPeriod(0);
+        beaconManager.startMonitoring(region)
+        beaconManager.startRangingBeacons(region)
 
-        val beaconManager = BeaconManager.getInstanceForApplication(this)
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        Log.d("aa", "onStop: $owner")
+
+        beaconManager.stopRangingBeacons(region)
+        beaconManager.stopMonitoring(region)
+        beaconManager.setIntentScanningStrategyEnabled(true)
+        beaconManager.startMonitoring(region)
+        beaconManager.startRangingBeacons(region)
+        var a = 0
+    }
+
+    //lateinit var appLifecycleObserver: AppLifecycleObserver
+    //@Inject
+    //lateinit var myAppLifecycleTracker: MyAppLifecycleTracker
+
+    override fun onCreate() {
+        super<Application>.onCreate()
+
+        //ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
+        //lifecycle.addObserver(myLifecycleTracker)
+
+        //val beaconManager = BeaconManager.getInstanceForApplication(this)
+        beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
 
         // If you don't care about AltBeacon, you can clear it from the defaults:
@@ -35,13 +73,13 @@ class BeaconReferenceApplication: Application() {
         // you can use the library's built-in foreground service to unlock this behavior on Android
         // 8+.   the method below shows how you set that up.
         //setupForegroundService()
-        //beaconManager.setEnableScheduledScanJobs(false);
-        //beaconManager.setBackgroundScanPeriod(1100);
-        //beaconManager.setBackgroundBetweenScanPeriod(0);
+        beaconManager.setEnableScheduledScanJobs(false)
+        beaconManager.setBackgroundScanPeriod(1100)
+        beaconManager.setBackgroundBetweenScanPeriod(0)
 
         // Ranging callbacks will drop out if no beacons are detected
         // Monitoring callbacks will be delayed by up to 25 minutes on region exit
-        beaconManager.setIntentScanningStrategyEnabled(true)
+        //beaconManager.setIntentScanningStrategyEnabled(true)
 
         // The code below will start "monitoring" for beacons matching the region definition below
         // the region definition is a wildcard that matches all beacons regardless of identifiers.

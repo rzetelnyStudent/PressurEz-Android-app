@@ -13,6 +13,7 @@ import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.models.Sensor
 import com.MichalKapuscinski.BikeTPMS.models.bikeList
 import com.MichalKapuscinski.BikeTPMS.scanner.BeaconReferenceApplication
+import com.MichalKapuscinski.BikeTPMS.scanner.SampleApplication
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     //lateinit var monitoringButton: Button
     //lateinit var rangingButton: Button
     lateinit var beaconReferenceApplication: BeaconReferenceApplication
+    //lateinit var sampleApplication: SampleApplication
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
     lateinit var myBikeListAdapter: CardAdapter
@@ -46,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         beaconReferenceApplication = application as BeaconReferenceApplication
+        lifecycle.addObserver(beaconReferenceApplication)
+        //sampleApplication = application as SampleApplication
+        //Log.d("aaaa", sampleApplication.isAppInForground.toString())
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
             .getRegionViewModel(beaconReferenceApplication.region)
@@ -66,11 +71,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         Log.d(TAG, "onPause")
         super.onPause()
+        //Log.d("aaaa", sampleApplication.isAppInForground.toString())
     }
 
     override fun onResume() {
         Log.d(TAG, "onResume")
         super.onResume()
+        //Log.d("aaaa", sampleApplication.isAppInForground.toString())
         // You MUST make sure the following dynamic permissions are granted by the user to detect beacons
         //
         //    Manifest.permission.BLUETOOTH_SCAN
