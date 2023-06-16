@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             adapter = myBikeListAdapter
         }
 
+
         beaconReferenceApplication = application as BeaconReferenceApplication
         lifecycle.addObserver(beaconReferenceApplication)
         // Set up a Live Data observer for beacon data
