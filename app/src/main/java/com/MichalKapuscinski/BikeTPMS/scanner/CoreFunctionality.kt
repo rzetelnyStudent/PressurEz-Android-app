@@ -10,12 +10,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.R
+import com.MichalKapuscinski.BikeTPMS.models.Bike
 import org.altbeacon.beacon.*
 
 class CoreFunctionality: Application(), DefaultLifecycleObserver {
     lateinit var region: Region
     private lateinit var beaconManager: BeaconManager
     private lateinit var bleScanner: BleScanner
+    var bikeList = mutableListOf<Bike>()
 
     var notificationCreated = false
 

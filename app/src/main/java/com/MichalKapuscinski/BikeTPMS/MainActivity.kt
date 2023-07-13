@@ -11,7 +11,6 @@ import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsAc
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.models.Sensor
-import com.MichalKapuscinski.BikeTPMS.models.bikeList
 import com.MichalKapuscinski.BikeTPMS.scanner.CoreFunctionality
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import org.altbeacon.beacon.Beacon
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     //lateinit var beaconCountTextView: TextView
     //lateinit var monitoringButton: Button
     //lateinit var rangingButton: Button
-    lateinit var coreFunctionality: CoreFunctionality
+    private lateinit var coreFunctionality: CoreFunctionality
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
     lateinit var myBikeListAdapter: CardAdapter
@@ -37,16 +36,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        populateBikes()
+
         //val mainActivity = this
-        myBikeListAdapter = CardAdapter(bikeList)
+        coreFunctionality = application as CoreFunctionality
+        myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
+        populateBikes()
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = myBikeListAdapter
         }
-
-
-        coreFunctionality = application as CoreFunctionality
         lifecycle.addObserver(coreFunctionality)
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
@@ -55,13 +53,6 @@ class MainActivity : AppCompatActivity() {
         regionViewModel.regionState.observe(this, monitoringObserver)
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
         regionViewModel.rangedBeacons.observe(this, rangingObserver)
-       // rangingButton = findViewById<Button>(R.id.rangingButton)
-       // monitoringButton = findViewById<Button>(R.id.monitoringButton)
-       // beaconListView = findViewById<ListView>(R.id.beaconList)
-       // beaconCountTextView = findViewById<TextView>(R.id.beaconCount)
-      //  beaconCountTextView.text = "No beacons detected"
-      //  beaconListView.adapter =
-      //      ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
 
     }
 
@@ -188,14 +179,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun populateBikes() {
 
-        bike1 = Bike(
-            R.drawable.ic_bike,
-            "Zimówka",
-            sensorFront,
-            sensorRear
-        )
-        bikeList.add(bike1)
-
+        bike1 = Bike("Zimówka", R.drawable.ic_bike, coreFunctionality.bikeList.size, 0x000001, 2)
+        coreFunctionality.bikeList.add(bike1)
     }
 
     private fun updateBikes() {

@@ -16,7 +16,7 @@ import java.nio.ByteOrder
 import androidx.lifecycle.Observer
 
 
-class Sensor (_id: Int = 0, _pressureBar: Int = 0, _temperatureC: Int = 0, _battery: Byte = 0, _leakAlert: Boolean = false) {
+class Sensor (_id: Int, _pressureBar: Int = 0, _temperatureC: Int = 0, _battery: Byte = 0, _leakAlert: Boolean = false) {
 
     private val PRESSURE_POS = 17
     private val TEMP_POS = 21
