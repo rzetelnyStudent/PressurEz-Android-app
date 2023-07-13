@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         if (state == MonitorNotifier.OUTSIDE) {
             dialogTitle = "No beacons detected"
             dialogMessage = "didExitRegionEvent has fired"
-            stateString == "outside"
+            stateString = "outside"
            // beaconCountTextView.text = "Outside of the beacon region -- no beacons detected"
           //  beaconListView.adapter =
           //      ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
