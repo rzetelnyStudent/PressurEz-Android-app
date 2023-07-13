@@ -10,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="16dp"
-        android:layout_margin="10dp"
+        android:layout_margin="17dp"
         android:clickable="true"
+        app:cardBackgroundColor="@color/veryLightGrey"
+        android:foreground="?attr/selectableItemBackground"
         app:cardElevation="0dp">
 
         <RelativeLayout
@@ -22,28 +24,28 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
-            <ImageButton
-                android:id="@+id/bikeEditBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:background="@color/white"
-                android:src="@drawable/ic_edit"
-                android:contentDescription="@string/editbtn" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/bikeEditBtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentTop="true"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:background="@color/white"-->
+<!--                android:src="@drawable/ic_edit"-->
+<!--                android:contentDescription="@string/editbtn" />-->
+
             <TextView
                 android:id="@+id/pressureRear"
-                android:paddingLeft="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="12dp"
+                android:lines="1"
                 android:text="@string/pressure_no_reading"
                 android:textColor="@color/black"
                 android:textSize="40sp"
-                android:textStyle="bold"
-                android:lines="1" />
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/pressureUnitRear"
                 android:paddingLeft="4dp"
@@ -57,10 +59,9 @@
                 android:lines="1" />
             <TextView
                 android:id="@+id/temperatureRear"
-                android:paddingLeft="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignLeft="@+id/pressureRear"
                 android:layout_below="@id/pressureRear"
                 android:layout_marginTop="6dp"
                 android:text="@string/temp_no_reading"
@@ -85,11 +86,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/temperatureRear"
-                android:layout_alignParentLeft="true"
+                android:layout_alignLeft="@+id/temperatureRear"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="20dp"
                 android:lines="1"
-                android:paddingLeft="24dp"
                 android:text="@string/bat_no_reading"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -140,7 +140,7 @@
                 android:lines="1" />
             <TextView
                 android:id="@+id/pressureUnitFront"
-                android:paddingRight="24dp"
+                android:layout_marginRight="10dp"
                 android:paddingLeft="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
