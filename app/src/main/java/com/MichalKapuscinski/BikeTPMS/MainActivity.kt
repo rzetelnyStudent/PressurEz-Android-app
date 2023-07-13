@@ -12,7 +12,7 @@ import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.models.Sensor
 import com.MichalKapuscinski.BikeTPMS.models.bikeList
-import com.MichalKapuscinski.BikeTPMS.scanner.BeaconReferenceApplication
+import com.MichalKapuscinski.BikeTPMS.scanner.CoreFunctionality
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     //lateinit var beaconCountTextView: TextView
     //lateinit var monitoringButton: Button
     //lateinit var rangingButton: Button
-    lateinit var beaconReferenceApplication: BeaconReferenceApplication
+    lateinit var coreFunctionality: CoreFunctionality
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
     lateinit var myBikeListAdapter: CardAdapter
@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        beaconReferenceApplication = application as BeaconReferenceApplication
-        lifecycle.addObserver(beaconReferenceApplication)
+        coreFunctionality = application as CoreFunctionality
+        lifecycle.addObserver(coreFunctionality)
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
-            .getRegionViewModel(beaconReferenceApplication.region)
+            .getRegionViewModel(coreFunctionality.region)
         // observer will be called each time the monitored regionState changes (inside vs. outside region)
         regionViewModel.regionState.observe(this, monitoringObserver)
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
