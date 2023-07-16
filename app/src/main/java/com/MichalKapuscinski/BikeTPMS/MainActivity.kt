@@ -79,28 +79,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val monitoringObserver = Observer<Int> { state ->
-        var dialogTitle = "Beacons detected"
-        var dialogMessage = "didEnterRegionEvent has fired"
-        var stateString = "inside"
         if (state == MonitorNotifier.OUTSIDE) {
-            dialogTitle = "No beacons detected"
-            dialogMessage = "didExitRegionEvent has fired"
-            stateString = "outside"
             for (bike in coreFunctionality.bikeList) {
                 bike.sensorFront.setToNullData()
                 bike.sensorRear.setToNullData()
             }
             myBikeListAdapter.notifyDataSetChanged()
         }
-        Log.d(TAG, "monitoring state changed to : $stateString")
-        val builder =
-            AlertDialog.Builder(this)
-        builder.setTitle(dialogTitle)
-        builder.setMessage(dialogMessage)
-        builder.setPositiveButton(android.R.string.ok, null)
-        alertDialog?.dismiss()
-        alertDialog = builder.create()
-        alertDialog?.show()
     }
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
