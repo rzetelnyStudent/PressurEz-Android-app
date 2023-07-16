@@ -10,12 +10,32 @@ class CardViewHolder(
     fun bindBike(bike: Bike) {
         cardCellBinding.bikeIcon.setImageResource(bike.appearance)
         cardCellBinding.bikeName.text = bike.name
-        cardCellBinding.pressureFront.text = String.format("%.2f", (bike.sensorFront.pressureBar.toDouble() / 100000))
-        cardCellBinding.temperatureFront.text = String.format("%.1f", (bike.sensorFront.temperatureC.toDouble() / 100))
-        cardCellBinding.batteryFront.text = bike.sensorFront.battery.toString()
+        cardCellBinding.pressureFront.text = formatNullablePressure(bike.sensorFront.pressureBar)
+        cardCellBinding.temperatureFront.text = formatNullableTemp(bike.sensorFront.temperatureC)
+        cardCellBinding.batteryFront.text = formatNullableBat(bike.sensorFront.battery)
 
-        cardCellBinding.pressureRear.text = String.format("%.2f", (bike.sensorRear.pressureBar.toDouble() / 100000))
-        cardCellBinding.temperatureRear.text = String.format("%.1f", (bike.sensorRear.temperatureC.toDouble() / 100))
-        cardCellBinding.batteryRear.text = bike.sensorRear.battery.toString()
+        cardCellBinding.pressureRear.text = formatNullablePressure(bike.sensorRear.pressureBar)
+        cardCellBinding.temperatureRear.text = formatNullableTemp(bike.sensorRear.temperatureC)
+        cardCellBinding.batteryRear.text = formatNullableBat(bike.sensorRear.battery)
+    }
+
+    private fun formatNullablePressure(value: Int?) : String {
+        return if (value == null) {
+            "-,--"
+        } else {
+            String.format("%.2f", (value.toDouble() / 100000))
+        }
+    }
+
+    private fun formatNullableTemp(value: Int?) : String {
+        return if (value == null) {
+            "--,-"
+        } else {
+            String.format("%.1f", (value.toDouble() / 100))
+        }
+    }
+
+    private fun formatNullableBat(value: Byte?) : String {
+        return value?.toString() ?: "--"
     }
 }
