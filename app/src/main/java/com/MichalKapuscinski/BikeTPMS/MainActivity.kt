@@ -19,17 +19,12 @@ import org.altbeacon.beacon.MonitorNotifier
 
 
 class MainActivity : AppCompatActivity() {
-    //lateinit var beaconListView: ListView
-    //lateinit var beaconCountTextView: TextView
-    //lateinit var monitoringButton: Button
-    //lateinit var rangingButton: Button
+
     private lateinit var coreFunctionality: CoreFunctionality
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
     lateinit var myBikeListAdapter: CardAdapter
-    lateinit var bike1: Bike
-    var sensorRear = Sensor(1)
-    var sensorFront = Sensor(1)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,10 +32,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //val mainActivity = this
         coreFunctionality = application as CoreFunctionality
         myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
-        populateBikes()
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = myBikeListAdapter
@@ -85,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val monitoringObserver = Observer<Int> { state ->
+    private val monitoringObserver = Observer<Int> { state ->
         var dialogTitle = "Beacons detected"
         var dialogMessage = "didEnterRegionEvent has fired"
         var stateString = "inside"
@@ -93,11 +86,11 @@ class MainActivity : AppCompatActivity() {
             dialogTitle = "No beacons detected"
             dialogMessage = "didExitRegionEvent has fired"
             stateString = "outside"
-           // beaconCountTextView.text = "Outside of the beacon region -- no beacons detected"
-          //  beaconListView.adapter =
-          //      ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
-        } else {
-           // beaconCountTextView.text = "Inside the beacon region."
+            for (bike in coreFunctionality.bikeList) {
+                bike.sensorFront.setToNullData()
+                bike.sensorRear.setToNullData()
+            }
+            myBikeListAdapter.notifyDataSetChanged()
         }
         Log.d(TAG, "monitoring state changed to : $stateString")
         val builder =
@@ -111,26 +104,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
-        Log.d(TAG, "Ranged: ${beacons.count()} beacons")
-        if (BeaconManager.getInstanceForApplication(this).rangedRegions.size > 0) {
-           // beaconCountTextView.text = "Ranging enabled: ${beacons.count()} beacon(s) detected"
-            for (beacon in beacons) {
-                val a = beacon.getDataFields()
-                val b = beacon.getExtraDataFields()
-                val c = 0
-                sensorFront.updateMeasurementFromAdvData(beacon.getDataFields())
-                sensorRear.updateMeasurementFromAdvData(beacon.getDataFields())
-                //newBikeList =
-                //myBikeListAdapter.updateData(newBikeList)
-                myBikeListAdapter.notifyDataSetChanged()
+        // Log.d(TAG, "Ranged: ${beacons.count()} beacons")
+        if (BeaconManager.getInstanceForApplication(this).rangedRegions.isNotEmpty()) {
+            for (bike in coreFunctionality.bikeList) {
+                for (sensor in beacons) {
+                    if (bike.sensorFront.equalId(
+                            sensor.id1.toInt(),
+                            sensor.id2.toInt(),
+                            sensor.id3.toInt()
+                        )
+                    ) {    // exceptions!!!!
+                        bike.sensorFront.updateMeasurementFromAdvData(sensor.dataFields)
+                    } else {
+                        bike.sensorFront.setToNullData()
+                    }
+                    if (bike.sensorRear.equalId(
+                            sensor.id1.toInt(),
+                            sensor.id2.toInt(),
+                            sensor.id3.toInt()
+                        )
+                    ) {    // exceptions!!!!
+                        bike.sensorRear.updateMeasurementFromAdvData(sensor.dataFields)
+                    } else {
+                        bike.sensorRear.setToNullData()
+                    }
+                }
             }
-
-           // beaconListView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-           //     beacons
-           //         .sortedBy { it.distance }
-           //         .map { "${it.id1}\nid2: ${it.id2} id3:  rssi: ${it.rssi}\npress: ${it.distance} m" }
-            //        .toTypedArray()
-           // )
+            myBikeListAdapter.notifyDataSetChanged()
         }
     }
 
@@ -176,18 +176,6 @@ class MainActivity : AppCompatActivity() {
 //        alertDialog?.show()
 //
 //    }
-
-    private fun populateBikes() {
-
-        bike1 = Bike("Zimówka", R.drawable.ic_bike, coreFunctionality.bikeList.size, 0x000001, 2)
-        coreFunctionality.bikeList.add(bike1)
-    }
-
-    private fun updateBikes() {
-
-    }
-
-
 
 
     companion object {

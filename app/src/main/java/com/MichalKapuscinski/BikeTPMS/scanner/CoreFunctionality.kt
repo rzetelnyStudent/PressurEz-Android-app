@@ -17,6 +17,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     lateinit var region: Region
     private lateinit var beaconManager: BeaconManager
     private lateinit var bleScanner: BleScanner
+    private val diskStorage = DiskStorage()
     var bikeList = mutableListOf<Bike>()
 
     var notificationCreated = false
@@ -46,7 +47,6 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 //        beaconManager.setIntentScanningStrategyEnabled(true)
 //        beaconManager.startMonitoring(region)
 //        beaconManager.startRangingBeacons(region)
-        var a = 0
     }
 
     //lateinit var appLifecycleObserver: AppLifecycleObserver
@@ -56,8 +56,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onCreate() {
         super<Application>.onCreate()
 
-        Log.d("aaa", "BeaconRef.onCreate()")
-
+        diskStorage.readSensorsFromDisk(bikeList)
         beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
 
@@ -118,17 +117,25 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     }
 
 
-    private val centralRangingObserver = Observer<Collection<Beacon>> { beacons ->
-        Log.d("aaa", "Ranged: ${beacons.count()} beacons")
-        // notificationManager.notify(notificationId, builder.build())
-        //if (notificationCreated) {
-        //    updateNotification()
-        //} //else {
-        //    sendNotification()
-        //}
-        for (beacon: Beacon in beacons) {
-            Log.d("aaa", "$beacon about ${beacon.distance} meters away")
+    private val centralRangingObserver = Observer<Collection<Beacon>> { sensors ->
+        Log.d("aaa", "Ranged: ${sensors.count()} beacons")
+
+        for (sensor: Beacon in sensors) {
+            for (bike: Bike in bikeList) {
+                if (bike.sensorFront.equalId(sensor.id1.toInt(), sensor.id2.toInt(), sensor.id3.toInt())) {    // exceptions!!!!
+                    bike.sensorFront.updateMeasurementFromAdvData(sensor.dataFields)
+                }
+                if (bike.sensorRear.equalId(sensor.id1.toInt(), sensor.id2.toInt(), sensor.id3.toInt())) {    // exceptions!!!!
+                    bike.sensorRear.updateMeasurementFromAdvData(sensor.dataFields)
+                }
+            }
+            //Log.d("aaa", "$sensor about ${sensor.distance} meters away")
         }
+    }
+
+    public fun addNewBike(fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
+        bikeList.add(Bike("Zimówka", R.drawable.ic_bike, bikeList.size, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
+        diskStorage.saveSensorsOnDisk(bikeList)
     }
 
     var notificationId = 0

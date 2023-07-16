@@ -16,7 +16,7 @@ import java.nio.ByteOrder
 import androidx.lifecycle.Observer
 
 
-class Sensor (_id: Int, _pressureBar: Int = 0, _temperatureC: Int = 0, _battery: Byte = 0, _leakAlert: Boolean = false) {
+class Sensor (_id: Int, _lowPressThresh: Int) {
 
     private val PRESSURE_POS = 17
     private val TEMP_POS = 21
@@ -27,29 +27,31 @@ class Sensor (_id: Int, _pressureBar: Int = 0, _temperatureC: Int = 0, _battery:
         private set(value) {
             field = value
         }
-    var pressureBar: Int = _pressureBar
+    var pressureBar: Int? = null
         private set(value) {
             field = value
         }
-    var temperatureC: Int = _temperatureC
+    var temperatureC: Int? = null
         private set(value) {
             field = value
         }
-    var battery: Byte = _battery
+    var battery: Byte? = null
         private set(value) {
             field = value
         }
-    var leakAlert: Boolean = _leakAlert
-        get() = field
-        private set(value) {
-            field = value
-        }
+//    var leakAlert: Boolean = _leakAlert
+//        get() = field
+//        private set(value) {
+//            field = value
+//        }
+
+    var lowPressThresh: Int = _lowPressThresh
 
     public fun updateMeasurementFromAdvData(advData: List<Long>) {
         pressureBar = decodeInt(advData[0].toInt())
         temperatureC = decodeInt(advData[1].toInt())
         battery = advData[2].toByte()
-        leakAlert = when (advData[3]) {0.toLong() -> false; else -> true}
+        //leakAlert = when (advData[3]) {0.toLong() -> false; else -> true}
         Log.d("Moje", "pressure:" + pressureBar.toString())
         Log.d("Moje", "temp:" +temperatureC.toString())
         Log.d("Moje", "bat:" +battery.toString())
@@ -62,6 +64,21 @@ class Sensor (_id: Int, _pressureBar: Int = 0, _temperatureC: Int = 0, _battery:
         buffer.order(ByteOrder.LITTLE_ENDIAN)
         buffer.flip()
         return buffer.int
+    }
+
+    public fun equalId(id3: Int, id2: Int, id1: Int): Boolean {
+        if (id3 <= 0xFF && id2 <= 0xFF && id1 <= 0xFF) {
+            return (id == id3.shl(16).or(id2.shl(8).or(id1)))
+        }
+        else {
+            return false
+        }
+    }
+
+    fun setToNullData() {
+        pressureBar = null
+        temperatureC = null
+        battery = null
     }
 
 

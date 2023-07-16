@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">PressurEz</string>
     <string name="bike_name_default">New bike</string>
-    <string name="pressure_no_reading">3.45</string>
-    <string name="temp_no_reading">25.6</string>
-    <string name="bat_no_reading">100</string>
+    <string name="pressure_no_reading">-,--</string>
+    <string name="temp_no_reading">--,-</string>
+    <string name="bat_no_reading">--</string>
     <string name="pressure_unit">bar</string>
     <string name="temp_unit">°C</string>
     <string name="bat_unit">%</string>

@@ -2,7 +2,7 @@ package com.MichalKapuscinski.BikeTPMS.models
 
 //var bikeList = mutableListOf<Bike>()
 
-class Bike(name: String, appearance: Int, id: Int, sensorFid: Int, sensorRid: Int) {
+class Bike(name: String, appearance: Int, id: Int, sensorFid: Int, sensorRid: Int, lowPressThreshF: Int, lowPressThreshR: Int) {
 
     var appearance: Int
     var name: String
@@ -13,8 +13,8 @@ class Bike(name: String, appearance: Int, id: Int, sensorFid: Int, sensorRid: In
         this.name = name
         this.appearance = appearance
         this.id = id
-        sensorFront = Sensor(sensorFid)
-        sensorRear = Sensor(sensorRid)
+        sensorFront = Sensor(sensorFid, lowPressThreshF)
+        sensorRear = Sensor(sensorRid, lowPressThreshR)
     }
 
 }
