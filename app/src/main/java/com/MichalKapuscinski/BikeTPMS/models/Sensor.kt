@@ -14,39 +14,69 @@ import org.altbeacon.beacon.MonitorNotifier
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import androidx.lifecycle.Observer
+import androidx.room.Ignore
 
 
-class Sensor (_id: Int, _lowPressThresh: Int) {
-
-    private val PRESSURE_POS = 17
-    private val TEMP_POS = 21
-    private val BAT_POS = 25
-    private val LEAK_FLAG_POS = 26
-
-    var id: Int = _id
-        private set(value) {
-            field = value
-        }
-    var pressureBar: Int? = null
-        private set(value) {
-            field = value
-        }
-    var temperatureC: Int? = null
-        private set(value) {
-            field = value
-        }
+//class Sensor (_id: Int, _lowPressureTh: Int) {
+//
+////    private val PRESSURE_POS = 17
+////    private val TEMP_POS = 21
+////    private val BAT_POS = 25
+////    private val LEAK_FLAG_POS = 26
+//
+//    var id: Int
+////        private set(value) {
+////            field = value
+////        }
+//
+//    var lowPressureTh: Int
+////        private set(value) {
+////            field = value
+////        }
+//
+//    @Ignore
+//    var pressureBar: Int? //= null
+////        private set(value) {
+////            field = value
+////        }
+//
+//    @Ignore
+//    var temperatureC: Int? //= null
+////        private set(value) {
+////            field = value
+////        }
+//
+//    @Ignore
+//    var battery: Byte? = null
+////        private set(value) {
+////            field = value
+////        }
+//
+//    init {
+//        id = _id
+//        lowPressureTh = _lowPressureTh
+//        pressureBar = null
+//        temperatureC = null
+//        battery = null
+//    }
+//
+//    //@JvmOverloads
+//
+//    constructor(id: Int, lowPressureTh: Int, pressureBar: Int?, temperatureC: Int?, battery: Byte?) : this(id, lowPressureTh)
+data class Sensor(
+    var id: Int,
+    var lowPressureTh: Int,
+    @Ignore
+    var pressureBar: Int? = null,
+    @Ignore
+    var temperatureC: Int? = null,
+    @Ignore
     var battery: Byte? = null
-        private set(value) {
-            field = value
-        }
-//    var leakAlert: Boolean = _leakAlert
-//        get() = field
-//        private set(value) {
-//            field = value
-//        }
+) {
 
-    var lowPressThresh: Int = _lowPressThresh
+    constructor(id: Int, lowPressureTh: Int) : this(id, lowPressureTh, null, null, null)
 
+    @Ignore
     public fun updateMeasurementFromAdvData(advData: List<Long>) {
         pressureBar = decodeInt(advData[0].toInt())
         temperatureC = decodeInt(advData[1].toInt())
@@ -58,6 +88,7 @@ class Sensor (_id: Int, _lowPressThresh: Int) {
 
     }
 
+    @Ignore
     private fun decodeInt(codedValue: Int) : Int {
         val buffer = ByteBuffer.allocate(4)
         buffer.putInt(codedValue)
@@ -66,6 +97,7 @@ class Sensor (_id: Int, _lowPressThresh: Int) {
         return buffer.int
     }
 
+    @Ignore
     public fun equalId(id3: Int, id2: Int, id1: Int): Boolean {
         if (id3 <= 0xFF && id2 <= 0xFF && id1 <= 0xFF) {
             return (id == id3.shl(16).or(id2.shl(8).or(id1)))
@@ -75,33 +107,10 @@ class Sensor (_id: Int, _lowPressThresh: Int) {
         }
     }
 
+    @Ignore
     fun setToNullData() {
         pressureBar = null
         temperatureC = null
         battery = null
     }
-
-
-//    private fun sendNotification() {
-//        val builder = NotificationCompat.Builder(this, "beacon-ref-notification-id")
-//            .setSmallIcon(R.drawable.ic_stat_bike)
-//            .setContentTitle("Zimówka")
-//            .setContentText("Rear: " + "1,34" + "\t" + "Front: " + "2,45")
-//        //.setPriority(NotificationCompat.PRIORITY_HIGH)
-//        val stackBuilder = TaskStackBuilder.create(this)
-//        stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
-//        val resultPendingIntent = stackBuilder.getPendingIntent(
-//            0,
-//            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
-//        )
-//        builder.setContentIntent(resultPendingIntent)
-//
-//        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        notificationManager.notify(notificationId, builder.build())
-//        notificationCreated = true
-//        //with(NotificationManagerCompat.from(context)) {
-//        //    notify(notificationId, builder.build())
-//        //}
-//    }
-
 }

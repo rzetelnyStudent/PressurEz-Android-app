@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.R
+import com.MichalKapuscinski.BikeTPMS.disk.storage.DiskStorage
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import org.altbeacon.beacon.*
 
@@ -17,7 +18,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     lateinit var region: Region
     private lateinit var beaconManager: BeaconManager
     private lateinit var bleScanner: BleScanner
-    private val diskStorage = DiskStorage()
+    private lateinit var diskStorage: DiskStorage
     var bikeList = mutableListOf<Bike>()
 
     var notificationCreated = false
@@ -25,7 +26,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         Log.d("aa", "onStart: $owner")
-        bleScanner.startForegroundScan()
+        //bleScanner.stopBackgroundStartForegroundScan()
 //        beaconManager.stopRangingBeacons(region)
 //        beaconManager.stopMonitoring(region)
 //        beaconManager.setIntentScanningStrategyEnabled(false)
@@ -40,7 +41,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         //Log.d("aa", "onStop: $owner")
-        bleScanner.startBackgroundScan()
+        //bleScanner.stopForegroundStartBackgroundScan()
 
 //        beaconManager.stopRangingBeacons(region)
 //        beaconManager.stopMonitoring(region)
@@ -56,6 +57,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onCreate() {
         super<Application>.onCreate()
 
+        diskStorage = DiskStorage(this)
         diskStorage.readSensorsFromDisk(bikeList)
         beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
@@ -134,8 +136,8 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     }
 
     public fun addNewBike(fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
-        bikeList.add(Bike("Zimówka", R.drawable.ic_bike, bikeList.size, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
-        diskStorage.saveSensorsOnDisk(bikeList)
+        bikeList.add(Bike(bikeList.size, "Zimówka", R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
+        //diskStorage.saveBikeOnDisk(bikeList)
     }
 
     var notificationId = 0

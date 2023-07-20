@@ -29,6 +29,12 @@ class BleScanner(private val _beaconManager: BeaconManager, private val _region:
     }
 
     public fun startBackgroundScan() {
+        beaconManager.setIntentScanningStrategyEnabled(true)
+        beaconManager.startMonitoring(region)
+        beaconManager.startRangingBeacons(region)
+    }
+
+    public fun stopForegroundStartBackgroundScan() {
         beaconManager.stopRangingBeacons(region)
         beaconManager.stopMonitoring(region)
         beaconManager.setIntentScanningStrategyEnabled(true)
@@ -36,7 +42,7 @@ class BleScanner(private val _beaconManager: BeaconManager, private val _region:
         beaconManager.startRangingBeacons(region)
     }
 
-    public fun startForegroundScan() {
+    public fun stopBackgroundStartForegroundScan() {
         beaconManager.stopRangingBeacons(region)
         beaconManager.stopMonitoring(region)
         beaconManager.setIntentScanningStrategyEnabled(false)
