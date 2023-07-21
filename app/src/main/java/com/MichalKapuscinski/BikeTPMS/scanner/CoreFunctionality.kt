@@ -26,7 +26,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         Log.d("aa", "onStart: $owner")
-        //bleScanner.stopBackgroundStartForegroundScan()
+        bleScanner.stopBackgroundStartForegroundScan()
 //        beaconManager.stopRangingBeacons(region)
 //        beaconManager.stopMonitoring(region)
 //        beaconManager.setIntentScanningStrategyEnabled(false)
@@ -41,7 +41,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         //Log.d("aa", "onStop: $owner")
-        //bleScanner.stopForegroundStartBackgroundScan()
+        bleScanner.stopForegroundStartBackgroundScan()
 
 //        beaconManager.stopRangingBeacons(region)
 //        beaconManager.stopMonitoring(region)
@@ -50,39 +50,17 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 //        beaconManager.startRangingBeacons(region)
     }
 
-    //lateinit var appLifecycleObserver: AppLifecycleObserver
-    //@Inject
-    //lateinit var myAppLifecycleTracker: MyAppLifecycleTracker
-
     override fun onCreate() {
         super<Application>.onCreate()
 
         diskStorage = DiskStorage(this)
         diskStorage.readSensorsFromDisk(bikeList)
+
         beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
-
         region = Region("all-beacons", null, null, null)
         bleScanner = BleScanner(beaconManager, region)
-        bleScanner.initialize(this.centralRangingObserver, this.centralMonitoringObserver)
-        bleScanner.startBackgroundScan()
-
-
-//        beaconManager.setIntentScanningStrategyEnabled(true)
-//
-//        // The code below will start "monitoring" for beacons matching the region definition below
-//        // the region definition is a wildcard that matches all beacons regardless of identifiers.
-//        // if you only want to detect beacons with a specific UUID, change the id1 paremeter to
-//        // a UUID like Identifier.parse("2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6")
-//        region = Region("all-beacons", null, null, null)
-//        beaconManager.startMonitoring(region)
-//        beaconManager.startRangingBeacons(region)
-//        // These two lines set up a Live Data observer so this Activity can get beacon data from the Application class
-//        val regionViewModel = BeaconManager.getInstanceForApplication(this).getRegionViewModel(region)
-//        // observer will be called each time the monitored regionState changes (inside vs. outside region)
-//        regionViewModel.regionState.observeForever( centralMonitoringObserver)
-//        // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
-//        regionViewModel.rangedBeacons.observeForever( centralRangingObserver)
+        bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
     }
 
 //    fun setupForegroundService() {
