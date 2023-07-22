@@ -18,5 +18,5 @@ interface BikeDao {
     fun deleteBike(bike: Bike)
 
     @Query("SELECT * FROM bikes")
-    fun selectBikes() : LiveData<List<Bike>>
+    fun selectBikes() : List<Bike>
 }
