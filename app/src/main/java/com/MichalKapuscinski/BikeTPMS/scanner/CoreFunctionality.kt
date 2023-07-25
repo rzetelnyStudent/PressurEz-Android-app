@@ -25,36 +25,26 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        Log.d("aa", "onStart: $owner")
+        //Log.d("aa", "onStart: $owner")
         bleScanner.stopBackgroundStartForegroundScan()
-//        beaconManager.stopRangingBeacons(region)
-//        beaconManager.stopMonitoring(region)
-//        beaconManager.setIntentScanningStrategyEnabled(false)
-//        beaconManager.setEnableScheduledScanJobs(false);
-//        beaconManager.setBackgroundScanPeriod(1100);
-//        beaconManager.setBackgroundBetweenScanPeriod(0);
-//        beaconManager.startMonitoring(region)
-//        beaconManager.startRangingBeacons(region)
-
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         //Log.d("aa", "onStop: $owner")
         bleScanner.stopForegroundStartBackgroundScan()
-
-//        beaconManager.stopRangingBeacons(region)
-//        beaconManager.stopMonitoring(region)
-//        beaconManager.setIntentScanningStrategyEnabled(true)
-//        beaconManager.startMonitoring(region)
-//        beaconManager.startRangingBeacons(region)
     }
 
     override fun onCreate() {
         super<Application>.onCreate()
 
         diskStorage = DiskStorage(this)
-        diskStorage.readSensorsFromDisk(bikeList)
+        diskStorage.saveBikeOnDisk(Bike(0, "aaa", R.drawable.ic_bike, 2, 1, 1000, 1000))
+        bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
+        addEditBike("ssss", 2, 2, 2, 2)
+        //diskStorage.deleteBike(bikeList[0])
+        //diskStorage.deleteBike(bikeList[1])
+
 
         beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
@@ -113,9 +103,11 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         }
     }
 
-    public fun addNewBike(fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
-        bikeList.add(Bike(bikeList.size, "Zimówka", R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
-        //diskStorage.saveBikeOnDisk(bikeList)
+    public fun addEditBike(name: String, fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
+        //bikeList.add(Bike(bikeList.size, "Zimówka", R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
+        diskStorage.saveBikeOnDisk(Bike(0, name, R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
+        bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
+        // toast???
     }
 
     var notificationId = 0
