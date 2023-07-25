@@ -18,24 +18,4 @@ class CardViewHolder(
         cardCellBinding.temperatureRear.text = formatNullableTemp(bike.sensorRear.temperatureC)
         cardCellBinding.batteryRear.text = formatNullableBat(bike.sensorRear.battery)
     }
-
-    private fun formatNullablePressure(value: Int?) : String {
-        return if (value == null) {
-            "-,--"
-        } else {
-            String.format("%.2f", (value.toDouble() / 100000))
-        }
-    }
-
-    private fun formatNullableTemp(value: Int?) : String {
-        return if (value == null) {
-            "--,-"
-        } else {
-            String.format("%.1f", (value.toDouble() / 100))
-        }
-    }
-
-    private fun formatNullableBat(value: Byte?) : String {
-        return value?.toString() ?: "--"
-    }
 }

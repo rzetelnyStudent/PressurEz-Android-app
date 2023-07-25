@@ -19,6 +19,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     private lateinit var beaconManager: BeaconManager
     private lateinit var bleScanner: BleScanner
     private lateinit var diskStorage: DiskStorage
+    private lateinit var myNotificationManager: MyNotificationManager
     var bikeList = mutableListOf<Bike>()
 
     var notificationCreated = false
@@ -44,7 +45,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         //diskStorage.deleteBike(bikeList[0])
         //diskStorage.deleteBike(bikeList[1])
 
-
+        myNotificationManager = MyNotificationManager(this, "Pressure notifications", "Notifications shown and updated when a bike is detected")
         beaconManager = BeaconManager.getInstanceForApplication(this)
         BeaconManager.setDebug(true)
         region = Region("all-beacons", null, null, null)
@@ -81,7 +82,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         else {
             Log.d("aaa", "inside beacon region: ")
             //when (notificationCreated) {false->sendNotification(); true->updateNotification()}
-            sendNotification()
+
         }
     }
 
@@ -96,6 +97,9 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
                 }
                 if (bike.sensorRear.equalId(sensor.id1.toInt(), sensor.id2.toInt(), sensor.id3.toInt())) {    // exceptions!!!!
                     bike.sensorRear.updateMeasurementFromAdvData(sensor.dataFields)
+                }
+                if (bike.sensorFront.equalId(sensor.id1.toInt(), sensor.id2.toInt(), sensor.id3.toInt()) || bike.sensorRear.equalId(sensor.id1.toInt(), sensor.id2.toInt(), sensor.id3.toInt())) {
+                    myNotificationManager.sendNotification(bike)
                 }
             }
             //Log.d("aaa", "$sensor about ${sensor.distance} meters away")
@@ -117,7 +121,6 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
             .setSmallIcon(R.drawable.ic_stat_bike)
             .setContentTitle("Zimówka")
             .setContentText("Rear: " + "1,34" + "\t" + "Front: " + "2,45")
-            //.setPriority(NotificationCompat.PRIORITY_HIGH)
         val stackBuilder = TaskStackBuilder.create(this)
         stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
         val resultPendingIntent = stackBuilder.getPendingIntent(
