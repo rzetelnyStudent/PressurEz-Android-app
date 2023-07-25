@@ -39,9 +39,8 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         super<Application>.onCreate()
 
         diskStorage = DiskStorage(this)
-        diskStorage.saveBikeOnDisk(Bike(0, "aaa", R.drawable.ic_bike, 2, 1, 1000, 1000))
         bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
-        addEditBike("ssss", 2, 2, 2, 2)
+        //addEditBike("ssss", 2, 2, 2, 2)
         //diskStorage.deleteBike(bikeList[0])
         //diskStorage.deleteBike(bikeList[1])
 
