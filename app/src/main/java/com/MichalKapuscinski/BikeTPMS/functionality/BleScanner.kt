@@ -1,4 +1,4 @@
-package com.MichalKapuscinski.BikeTPMS.scanner
+package com.MichalKapuscinski.BikeTPMS.functionality
 
 import androidx.lifecycle.Observer
 import org.altbeacon.beacon.Beacon
