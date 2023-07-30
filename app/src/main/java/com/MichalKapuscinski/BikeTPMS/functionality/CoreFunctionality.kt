@@ -1,19 +1,14 @@
 package com.MichalKapuscinski.BikeTPMS.functionality
 
 import android.app.*
-import android.content.Context
-import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.disk.storage.DiskStorage
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.notifications.MyNotificationManager
-import com.MichalKapuscinski.BikeTPMS.notifications.NotificationState
 import org.altbeacon.beacon.*
 
 class CoreFunctionality: Application(), DefaultLifecycleObserver {
@@ -23,19 +18,20 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     private lateinit var diskStorage: DiskStorage
     private lateinit var myNotificationManager: MyNotificationManager
     var bikeList = mutableListOf<Bike>()
-
-    var notificationCreated = false
+    var isForeground = false
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        //Log.d("aa", "onStart: $owner")
+        isForeground = true
         bleScanner.stopBackgroundStartForegroundScan()
+        //Log.d("aa", "onStart: $owner")
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        //Log.d("aa", "onStop: $owner")
+        isForeground = false
         bleScanner.stopForegroundStartBackgroundScan()
+        //Log.d("aa", "onStop: $owner")
     }
 
     override fun onCreate() {
@@ -80,23 +76,12 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     private val centralMonitoringObserver = Observer<Int> { state ->
         if (state == MonitorNotifier.OUTSIDE) {
             Log.d("aaa", "outside beacon region: ")
-            for (bike in bikeList) {
-                bike.notificationState = NotificationState.NOT_VISIBLE    // there could be code like this:
-                //if (NotificationState.VISIBLE) -> {
-                ///    if (myNotificationManager.isNotificationVisible(bike)) {
-                //        myNotificationManager.sendNotification(bike)     // actually update a notification
-                //    }
-                //    else {     // it means the notification was dismissed
-                //        bike.notificationState = NotificationState.NOT_VISIBLE_DISMISSED
-                //    }
-                // tutaj powinno byc tez wynullowane data w powiadomieniu.
+            //for (bike in bikeList) {
+                //myNotificationManager.resetState(bike)   // sometimes sensor signal is dropped, then it would make the app post again notification.
+                // Even if it was dismissed
+                // tutaj powinno byc tez wynullowane data w powiadomieniu. Albo moze w sumie nie nullowac niech zostanie stara wartosc w powiadomieniu
                 // tutajpowinien sie znalezc kod, ktory z dismissed zrobi not_visible (zresetuje dismissa)
-            }
-        }
-        else {
-            Log.d("aaa", "inside beacon region: ")
-            //when (notificationCreated) {false->sendNotification(); true->updateNotification()}
-
+            //}
         }
     }
 
@@ -112,7 +97,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
                 }
             }
             // here logically could be: if (!sensorDetected[0]) { bike.sensorFront.setToNullData() }, but packets are lost sometimes
-            // it would be visible to user then
+            // Packet drops would be visible to user then
             for (sensorR in sensors) {
                 if (bike.sensorRear.equalId(sensorR.id1.toInt(), sensorR.id2.toInt(), sensorR.id3.toInt())) {    // exceptions!!!!
                     bike.sensorRear.updateMeasurementFromAdvData(sensorR.dataFields)
@@ -120,22 +105,9 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
                 }
             }
             // here logically could be: if (!sensorDetected[1]) { bike.sensorRear.setToNullData() }, but packets are lost sometimes
-            // it would be visible to user then
+            // Packet drops would be visible to user then
             if (sensorDetected[0] || sensorDetected[1]) {
-                when (bike.notificationState) {
-                    NotificationState.NOT_VISIBLE -> {
-                        myNotificationManager.sendNotification(bike)
-                        bike.notificationState = NotificationState.VISIBLE
-                    }
-                    NotificationState.VISIBLE -> {
-                        if (myNotificationManager.isNotificationVisible(bike)) {
-                            myNotificationManager.sendNotification(bike)     // actually update a notification
-                        } else {     // it means the notification was dismissed
-                            bike.notificationState = NotificationState.NOT_VISIBLE_DISMISSED
-                        }
-                    }
-                    NotificationState.NOT_VISIBLE_DISMISSED -> {}     // could check here if some sort of timeout passed since the notification was dismissed
-                }
+                myNotificationManager.postNotificationConditionally(bike, isForeground)
             }
         }
     }
@@ -145,50 +117,6 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         diskStorage.saveBikeOnDisk(Bike(0, name, R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
         bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
         // toast???
-    }
-
-    var notificationId = 0
-    var pressure = 0.0
-
-    private fun sendNotification() {
-        val builder = NotificationCompat.Builder(this, "beacon-ref-notification-id")
-            .setSmallIcon(R.drawable.ic_stat_bike)
-            .setContentTitle("Zimówka")
-            .setContentText("Rear: " + "1,34" + "\t" + "Front: " + "2,45")
-        val stackBuilder = TaskStackBuilder.create(this)
-        stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
-        val resultPendingIntent = stackBuilder.getPendingIntent(
-            0,
-            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
-        )
-        builder.setContentIntent(resultPendingIntent)
-
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, builder.build())
-        notificationCreated = true
-        //with(NotificationManagerCompat.from(context)) {
-        //    notify(notificationId, builder.build())
-        //}
-    }
-
-    private fun updateNotification() {
-        pressure += 0.1
-        val builder = NotificationCompat.Builder(this, "beacon-ref-notification-id")
-            .setSmallIcon(R.drawable.ic_stat_bike)
-            .setContentTitle("Zimówka")
-            .setContentText("Rear: " + pressure.toString() + "     " + "Front: " + "2,45")
-        //.setPriority(NotificationCompat.PRIORITY_HIGH)
-        val stackBuilder = TaskStackBuilder.create(this)
-        stackBuilder.addNextIntent(Intent(this, MainActivity::class.java))
-        val resultPendingIntent = stackBuilder.getPendingIntent(
-            0,
-            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
-        )
-        builder.setContentIntent(resultPendingIntent)
-
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, builder.build())
-        notificationCreated = true
     }
 
     companion object {

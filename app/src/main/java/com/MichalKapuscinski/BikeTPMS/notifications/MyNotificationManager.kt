@@ -35,7 +35,7 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
         }
     }
 
-    public fun sendNotification(bike: Bike) {
+    private fun sendNotification(bike: Bike) {
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(bike.appearance)
             .setContentTitle(bike.name)
@@ -60,7 +60,7 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
         //}
     }
 
-    public fun isNotificationVisible(bike: Bike): Boolean {
+    private fun isNotificationVisible(bike: Bike): Boolean {
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notifications = notificationManager.activeNotifications
         for (notification in notifications) {
@@ -69,6 +69,41 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
             }
         }
         return false
+    }
+
+    public fun resetState(bike: Bike) {
+        if (bike.notificationState == NotificationState.DISMISSED) {
+            bike.notificationState = NotificationState.NOT_VISIBLE
+        }
+    }
+
+    fun postNotificationConditionally(bike: Bike, isForeground: Boolean) {
+        when (bike.notificationState) {
+            NotificationState.NOT_VISIBLE -> {
+                if (!isForeground) {
+                    sendNotification(bike)
+                    bike.notificationState = NotificationState.VISIBLE
+                }
+            }
+            NotificationState.VISIBLE -> {
+                if (isNotificationVisible(bike)) {
+                    if (!isForeground) {
+                        sendNotification(bike)     // actually update a notification                       
+                    }
+                    else {
+                        deleteNotification(bike)
+                    }
+                } else {     // it means the notification was dismissed
+                    bike.notificationState = NotificationState.DISMISSED
+                }
+            }
+            NotificationState.DISMISSED -> {}     // could check here if some sort of timeout passed since the notification was dismissed
+        }
+    }
+
+    private fun deleteNotification(bike: Bike) {
+        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(bike.id)
     }
 
 }
