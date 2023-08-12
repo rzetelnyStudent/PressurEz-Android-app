@@ -9,9 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
-import com.MichalKapuscinski.BikeTPMS.models.Bike
-import com.MichalKapuscinski.BikeTPMS.models.Sensor
-import com.MichalKapuscinski.BikeTPMS.scanner.CoreFunctionality
+import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager

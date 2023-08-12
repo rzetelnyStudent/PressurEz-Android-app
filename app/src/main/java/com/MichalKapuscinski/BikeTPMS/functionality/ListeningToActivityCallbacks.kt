@@ -1,4 +1,4 @@
-package com.MichalKapuscinski.BikeTPMS.scanner
+package com.MichalKapuscinski.BikeTPMS.functionality
 
 import android.app.Activity
 import android.app.Application
