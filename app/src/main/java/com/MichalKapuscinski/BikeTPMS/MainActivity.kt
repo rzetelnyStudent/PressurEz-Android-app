@@ -5,8 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.MichalKapuscinski.BikeTPMS.NewTaskSheet
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
@@ -21,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var coreFunctionality: CoreFunctionality
     var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
+    private lateinit var taskViewModel: MyViewModel
     lateinit var myBikeListAdapter: CardAdapter
 
 
@@ -45,6 +49,24 @@ class MainActivity : AppCompatActivity() {
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
         regionViewModel.rangedBeacons.observe(this, rangingObserver)
 
+        taskViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+        binding.addBikeBtn.setOnClickListener {
+            NewTaskSheet().show(supportFragmentManager, "newTaskTag")
+        }
+
+        taskViewModel.bikeAddedOrEdited.observe(this){it ->
+            if (it != null) {
+                coreFunctionality.addEditBike(it)
+                Toast.makeText(this,
+                    it.name + " " + resources.getString(R.string.bike_added_toast),
+                    Toast.LENGTH_SHORT).show()
+                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
+                binding.recyclerView.apply {
+                    layoutManager = GridLayoutManager(applicationContext, 1)
+                    adapter = myBikeListAdapter
+                }
+            }
+        }
     }
 
     override fun onPause() {

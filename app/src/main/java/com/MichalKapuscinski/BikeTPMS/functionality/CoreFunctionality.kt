@@ -112,11 +112,16 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         }
     }
 
-    public fun addEditBike(name: String, fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
+    fun addEditBike(name: String, fSensorId: Int, rSensorId: Int, lowPressureThreshF: Int, lowPressureThreshR: Int) {
         //bikeList.add(Bike(bikeList.size, "Zimówka", R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
         diskStorage.saveBikeOnDisk(Bike(0, name, R.drawable.ic_bike, fSensorId, rSensorId, lowPressureThreshF, lowPressureThreshR))
         bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
         // toast???
+    }
+
+    fun addEditBike(bike: Bike) {
+        diskStorage.saveBikeOnDisk(bike)
+        bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
     }
 
     companion object {

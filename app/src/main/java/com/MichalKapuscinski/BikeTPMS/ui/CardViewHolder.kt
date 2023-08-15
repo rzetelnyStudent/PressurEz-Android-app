@@ -1,6 +1,7 @@
 package com.MichalKapuscinski.BikeTPMS.ui
 
 import androidx.recyclerview.widget.RecyclerView
+import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.databinding.CardCellBinding
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 
@@ -8,7 +9,7 @@ class CardViewHolder(
     private val cardCellBinding: CardCellBinding
 ) : RecyclerView.ViewHolder(cardCellBinding.root) {
     fun bindBike(bike: Bike) {
-        cardCellBinding.bikeIcon.setImageResource(bike.appearance)
+        cardCellBinding.bikeIcon.setImageResource(R.drawable.ic_bike)
         cardCellBinding.bikeName.text = bike.name
         cardCellBinding.pressureFront.text = formatNullablePressure(bike.sensorFront.pressureBar)
         cardCellBinding.temperatureFront.text = formatNullableTemp(bike.sensorFront.temperatureC)

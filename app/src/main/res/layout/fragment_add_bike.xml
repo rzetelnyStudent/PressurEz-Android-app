@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    tools:context=".NewTaskSheet">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/save_button"
+        android:layout_centerHorizontal="true"
+        android:text="Add bike"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <Button
+        android:id="@+id/close_button"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBaseline="@id/save_button"
+        app:icon="@drawable/baseline_close_24"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_button"
+        style="@style/Widget.Material3.Button.UnelevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="Save"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/baseline_pedal_bike_24"
+        android:layout_alignTop="@id/bike_name_field_layout"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/close_button"
+        android:layout_marginStart="9dp"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/bike_name_field_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/close_button"
+        android:layout_marginEnd="48dp"
+        android:layout_toRightOf="@id/close_button"
+        android:layout_marginStart="3dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bike_name_field"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/baseline_sensors_24"
+        android:layout_alignTop="@id/sensor_rear_id_field_layout"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/close_button"
+        android:layout_marginStart="9dp"/>
+
+
+    <View android:id="@+id/dummy_center_view"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_centerInParent="true"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sensor_front_id_field_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bike_name_field_layout"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/dummy_center_view"
+        android:layout_marginLeft="10dp"
+        android:layout_alignRight="@id/bike_name_field_layout"
+        app:counterEnabled="true"
+        app:counterMaxLength="6"
+        app:errorEnabled="true">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/sensor_front_id_field"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
+        android:maxLines="1"
+        android:hint="Front ID"
+        android:importantForAutofill="no"
+        android:inputType="textNoSuggestions|textVisiblePassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sensor_rear_id_field_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bike_name_field_layout"
+        android:layout_toLeftOf="@id/dummy_center_view"
+        android:layout_alignLeft="@id/bike_name_field_layout"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="6"
+        app:errorEnabled="true">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/sensor_rear_id_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bike_name_field_layout"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
+        android:maxLines="1"
+        android:hint="Rear ID"
+        android:importantForAutofill="no"
+        android:inputType="textNoSuggestions|textVisiblePassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pressure_warning_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/sensor_rear_id_field_layout"
+        android:layout_below="@id/sensor_rear_id_field_layout"
+        android:layout_marginTop="15dp"
+        android:text="Low pressure warning thresholds:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sensor_front_low_pressure_field_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pressure_warning_description"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/dummy_center_view"
+        android:layout_marginLeft="10dp"
+        android:layout_alignRight="@id/bike_name_field_layout"
+        app:suffixText="@string/pressure_unit"
+        app:helperTextEnabled="true"
+        app:helperText="@string/threshold_helper_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sensor_front_low_pressure_field"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
+            android:maxLines="1"
+            android:inputType="numberDecimal"
+            android:hint="Front"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sensor_rear_low_pressure_field_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pressure_warning_description"
+        android:layout_toLeftOf="@id/dummy_center_view"
+        android:layout_alignLeft="@id/bike_name_field_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        app:suffixText="@string/pressure_unit"
+        app:helperTextEnabled="true"
+        app:helperText="@string/threshold_helper_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sensor_rear_low_pressure_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bike_name_field_layout"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
+            android:maxLines="1"
+            android:inputType="numberDecimal"
+            android:hint="Rear"
+        />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/baseline_warning_24"
+        android:layout_alignTop="@id/sensor_rear_low_pressure_field_layout"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/close_button"
+        android:layout_marginStart="9dp"/>
+
+    </RelativeLayout>
+
+<!--    <com.google.android.material.slider.Slider-->
+<!--        android:id="@+id/sensor_rear_low_press"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_toLeftOf="@id/dummy_center_view"-->
+<!--        android:layout_below="@id/sensor_rear_id_field"-->
+<!--        android:layout_alignLeft="@id/sensor_rear_id_field"/>-->

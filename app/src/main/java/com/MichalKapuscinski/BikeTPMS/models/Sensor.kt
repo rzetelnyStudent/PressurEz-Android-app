@@ -78,7 +78,7 @@ data class Sensor(
 
     @Ignore
     public fun updateMeasurementFromAdvData(advData: List<Long>) {
-        pressureBar = decodeInt(advData[0].toInt())
+        pressureBar = decodeInt(advData[0].toInt()) / 100
         temperatureC = decodeInt(advData[1].toInt())
         battery = advData[2].toByte()
         //leakAlert = when (advData[3]) {0.toLong() -> false; else -> true}
@@ -94,7 +94,7 @@ data class Sensor(
         buffer.putInt(codedValue)
         buffer.order(ByteOrder.LITTLE_ENDIAN)
         buffer.flip()
-        return buffer.int
+        return (buffer.int)
     }
 
     @Ignore
