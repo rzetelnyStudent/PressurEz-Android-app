@@ -1,13 +1,14 @@
 package com.MichalKapuscinski.BikeTPMS
 
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnDetach
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.MichalKapuscinski.BikeTPMS.databinding.FragmentAddBikeBinding
@@ -18,7 +19,7 @@ import com.MichalKapuscinski.BikeTPMS.ui.validateSensorId
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class NewTaskSheet : BottomSheetDialogFragment()
+class AddBikeFragment : BottomSheetDialogFragment()
 {
     private lateinit var binding: FragmentAddBikeBinding
     private lateinit var myViewModel: MyViewModel
@@ -33,8 +34,12 @@ class NewTaskSheet : BottomSheetDialogFragment()
         binding.closeButton.setOnClickListener {view ->
             showDiscardChangesDialog(view.context)
         }
+        if (myViewModel.bikeAddedOrEdited.value == null) {
+            clearInputs()     // not necessary
+        } else {
+            populateInputs(myViewModel.bikeAddedOrEdited.value)
+        }
         enableInputValidation()
-        myViewModel.bikeAddedOrEdited.value = null
     }
 
 
@@ -43,6 +48,24 @@ class NewTaskSheet : BottomSheetDialogFragment()
         binding = FragmentAddBikeBinding.inflate(inflater,container,false)
         return binding.root
     }
+
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        return object: Dialog (requireActivity().
+//        OnBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                // handle logic
+////                if (shouldNotInvokeAgain) {
+////                    this.isEnabled = false
+////                }
+//            }, theme)
+//        }
+//    }
+
+
+//    override fun onDismiss(dialog: DialogInterface) {
+//        super.onDismiss(dialog)
+//        //Code here
+//    }
 
 
     private fun saveAction()
@@ -64,8 +87,12 @@ class NewTaskSheet : BottomSheetDialogFragment()
         binding.sensorRearLowPressureField.setText("")
     }
 
-    private fun populateInputs(bike: Bike) {
-
+    private fun populateInputs(bike: Bike?) {
+        binding.bikeNameField.setText("aaaaa")
+        binding.sensorFrontIdField.setText("aaaa")
+        binding.sensorRearIdField.setText("aaaa")
+        binding.sensorFrontLowPressureField.setText("1,0")
+        binding.sensorRearLowPressureField.setText("1,0")
     }
 
     private fun enableInputValidation() {

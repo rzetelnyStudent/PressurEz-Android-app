@@ -9,20 +9,20 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.MichalKapuscinski.BikeTPMS.NewTaskSheet
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
+import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BikeClickListener {
 
     private lateinit var coreFunctionality: CoreFunctionality
-    var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskViewModel: MyViewModel
     lateinit var myBikeListAdapter: CardAdapter
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         coreFunctionality = application as CoreFunctionality
-        myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
+        myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = myBikeListAdapter
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         taskViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         binding.addBikeBtn.setOnClickListener {
-            NewTaskSheet().show(supportFragmentManager, "newTaskTag")
+            launchAddEditBike(null)
         }
 
         taskViewModel.bikeAddedOrEdited.observe(this){it ->
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this,
                     it.name + " " + resources.getString(R.string.bike_added_toast),
                     Toast.LENGTH_SHORT).show()
-                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
+                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
                 binding.recyclerView.apply {
                     layoutManager = GridLayoutManager(applicationContext, 1)
                     adapter = myBikeListAdapter
@@ -189,6 +189,40 @@ class MainActivity : AppCompatActivity() {
         val PERMISSION_REQUEST_BLUETOOTH_SCAN = 1
         val PERMISSION_REQUEST_BLUETOOTH_CONNECT = 2
         val PERMISSION_REQUEST_FINE_LOCATION = 3
+    }
+
+    override fun onClick(bike: Bike) {
+        MaterialAlertDialogBuilder(this)
+            .setMessage("${resources.getString(R.string.what_to_do_with_bike)} ${bike.name}")
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.delete) { dialogParent, _ ->
+                MaterialAlertDialogBuilder(this)
+                    .setMessage("${resources.getString(R.string.delete_confirmation)} ${bike.name}?")
+                    .setNeutralButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(R.string.delete) { dialog, _ ->
+                        // delete Bike!!!!!!!
+                        dialog.dismiss()
+                        dialogParent.dismiss()
+                        //Toast
+                    }
+                    .show()
+            }
+            .setPositiveButton(R.string.edit) { dialog, _ ->
+                dialog.dismiss()
+                launchAddEditBike(bike)
+            }
+            .show()
+    }
+
+    private fun launchAddEditBike(bike: Bike?) {
+        taskViewModel.bikeAddedOrEdited.value = bike
+        val addBikeFragment = AddBikeFragment()
+        addBikeFragment.isCancelable = false     // temporarily
+        addBikeFragment.show(supportFragmentManager, "newTaskTag")
     }
 
 }
