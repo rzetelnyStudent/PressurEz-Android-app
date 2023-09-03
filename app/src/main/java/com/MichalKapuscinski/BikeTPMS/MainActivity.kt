@@ -108,31 +108,13 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         }
     }
 
-    val rangingObserver = Observer<Collection<Beacon>> { beacons ->
+    private val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         // Log.d(TAG, "Ranged: ${beacons.count()} beacons")
         if (BeaconManager.getInstanceForApplication(this).rangedRegions.isNotEmpty()) {
             for (bike in coreFunctionality.bikeList) {
                 for (sensor in beacons) {
-                    if (bike.sensorFront.equalId(
-                            sensor.id1.toInt(),
-                            sensor.id2.toInt(),
-                            sensor.id3.toInt()
-                        )
-                    ) {    // exceptions!!!!
-                        bike.sensorFront.updateMeasurementFromAdvData(sensor.dataFields)
-                    } else {
-                        bike.sensorFront.setToNullData()
-                    }
-                    if (bike.sensorRear.equalId(
-                            sensor.id1.toInt(),
-                            sensor.id2.toInt(),
-                            sensor.id3.toInt()
-                        )
-                    ) {    // exceptions!!!!
-                        bike.sensorRear.updateMeasurementFromAdvData(sensor.dataFields)
-                    } else {
-                        bike.sensorRear.setToNullData()
-                    }
+                    bike.sensorFront.updateDataIfDetected(sensor)
+                    bike.sensorRear.updateDataIfDetected(sensor)
                 }
             }
             myBikeListAdapter.notifyDataSetChanged()

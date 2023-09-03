@@ -91,21 +91,15 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         for (bike: Bike in bikeList) {
             val sensorDetected = booleanArrayOf(false, false)
             for (sensorF in sensors) {
-                if (bike.sensorFront.equalId(sensorF.id1.toInt(), sensorF.id2.toInt(), sensorF.id3.toInt())) {    // exceptions!!!!
-                    bike.sensorFront.updateMeasurementFromAdvData(sensorF.dataFields)
+                if (bike.sensorFront.updateDataIfDetected(sensorF)) {
                     sensorDetected[0] = true
                 }
             }
-            // here logically could be: if (!sensorDetected[0]) { bike.sensorFront.setToNullData() }, but packets are lost sometimes
-            // Packet drops would be visible to user then
             for (sensorR in sensors) {
-                if (bike.sensorRear.equalId(sensorR.id1.toInt(), sensorR.id2.toInt(), sensorR.id3.toInt())) {    // exceptions!!!!
-                    bike.sensorRear.updateMeasurementFromAdvData(sensorR.dataFields)
+                if (bike.sensorRear.updateDataIfDetected(sensorR)) {
                     sensorDetected[1] = true
                 }
             }
-            // here logically could be: if (!sensorDetected[1]) { bike.sensorRear.setToNullData() }, but packets are lost sometimes
-            // Packet drops would be visible to user then
             if (sensorDetected[0] || sensorDetected[1]) {
                 myNotificationManager.postNotificationConditionally(bike, isForeground)
             }

@@ -6,19 +6,23 @@ import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.BeaconParser
 import org.altbeacon.beacon.Region
 
-class BleScanner(private val _beaconManager: BeaconManager, private val _region: Region) {
+class BleScanner(_beaconManager: BeaconManager, _region: Region) {
 
     private val beaconManager = _beaconManager
     private val region = _region
     private val MANUFACTURER_CODE = intArrayOf(0x0100)
-    private val BEACON_LAYOUT = "m:3-4=eaca,i:5-5,i:6-6,i:7-7,p:2-2,d:8-11,d:12-15,d:16-16,d:17-17"
+    private val OLD_BEACON_LAYOUT = "m:3-4=eaca,i:5-5,i:6-6,i:7-7,p:2-2,d:8-11l,d:12-15l,d:16-16,d:17-17"
+    private val NEW_BEACON_LAYOUT = "m:2-3=beef,i:4-4,i:5-5,i:6-6,p:2-2,d:7-8l,d:9-10l,d:11-11"
 
     public fun startBackgroundScan(centralRangingObserver: Observer<Collection<Beacon>>, centralMonitoringObserver: Observer<Int>) {
 
-        beaconManager.getBeaconParsers().clear()
-        val beaconParser = BeaconParser().setBeaconLayout(BEACON_LAYOUT)
-        beaconParser.setHardwareAssistManufacturerCodes(MANUFACTURER_CODE)
-        beaconManager.getBeaconParsers().add(beaconParser)   // has to contain 3 ids otherwise an exception is thrown
+        beaconManager.beaconParsers.clear()
+        val beaconParserOld = BeaconParser().setBeaconLayout(OLD_BEACON_LAYOUT)
+        beaconParserOld.setHardwareAssistManufacturerCodes(MANUFACTURER_CODE)
+        val beaconParserNew = BeaconParser().setBeaconLayout(NEW_BEACON_LAYOUT)
+        beaconParserNew.setHardwareAssistManufacturerCodes(MANUFACTURER_CODE)
+        beaconManager.beaconParsers.add(beaconParserOld)   // has to contain 3 ids otherwise an exception is thrown
+        beaconManager.beaconParsers.add(beaconParserNew)
 
         // By default, the library will scan in the background every 5 minutes on Android 4-7,
         // which will be limited to scan jobs scheduled every ~15 minutes on Android 8+
