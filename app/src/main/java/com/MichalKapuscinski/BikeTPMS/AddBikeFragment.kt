@@ -2,13 +2,11 @@ package com.MichalKapuscinski.BikeTPMS
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.window.OnBackInvokedDispatcher
-import androidx.activity.OnBackPressedCallback
+import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.MichalKapuscinski.BikeTPMS.databinding.FragmentAddBikeBinding
@@ -16,6 +14,8 @@ import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.ui.validateBikeName
 import com.MichalKapuscinski.BikeTPMS.ui.validateLowPressureThreshold
 import com.MichalKapuscinski.BikeTPMS.ui.validateSensorId
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -31,6 +31,17 @@ class AddBikeFragment : BottomSheetDialogFragment()
         binding.saveButton.setOnClickListener {
             saveAction()
         }
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+//        dialog?.window?.decorView.system(
+//            view.system_ui_flag_layout_fullscreen
+//                    or view.system_ui_flag_layout_stable
+//                    or view.system_ui_flag_hide_navigation
+//                    or view.system_ui_flag_fullscreen
+//                    or view.system_ui_flag_immersive_sticky
+//                    or view.system_ui_flag_layout_hide_navigation
+//        )
+
         binding.closeButton.setOnClickListener {view ->
             showDiscardChangesDialog(view.context)
         }
@@ -44,7 +55,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
 
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAddBikeBinding.inflate(inflater,container,false)
         return binding.root
     }
