@@ -45,10 +45,11 @@ class AddBikeFragment : BottomSheetDialogFragment()
         binding.closeButton.setOnClickListener {view ->
             showDiscardChangesDialog(view.context)
         }
-        if (myViewModel.bikeAddedOrEdited.value == null) {
+        val bike = myViewModel.bikeAddedOrEdited.value?.first
+        if (bike == null) {
             clearInputs()     // not necessary
         } else {
-            populateInputs(myViewModel.bikeAddedOrEdited.value)
+            populateInputs(bike)
         }
         enableInputValidation()
     }
@@ -85,7 +86,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
         val bike = validateAllInputs()
         if (bike != null) {
             clearInputs()
-            myViewModel.bikeAddedOrEdited.value = bike
+            myViewModel.bikeAddedOrEdited.value = Pair(bike, true)
             dismiss()
         }
     }
@@ -98,12 +99,12 @@ class AddBikeFragment : BottomSheetDialogFragment()
         binding.sensorRearLowPressureField.setText("")
     }
 
-    private fun populateInputs(bike: Bike?) {
-        binding.bikeNameField.setText("aaaaa")
-        binding.sensorFrontIdField.setText("aaaa")
-        binding.sensorRearIdField.setText("aaaa")
-        binding.sensorFrontLowPressureField.setText("1,0")
-        binding.sensorRearLowPressureField.setText("1,0")
+    private fun populateInputs(bike: Bike) {
+        binding.bikeNameField.setText(bike.name)
+        binding.sensorFrontIdField.setText(bike.sensorFront.id.toString())
+        binding.sensorRearIdField.setText(bike.sensorRear.id.toString())
+        binding.sensorFrontLowPressureField.setText(bike.sensorFront.lowPressureTh.toString())
+        binding.sensorRearLowPressureField.setText(bike.sensorRear.lowPressureTh.toString())
     }
 
     private fun enableInputValidation() {

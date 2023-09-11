@@ -118,6 +118,11 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
     }
 
+    fun deleteBike(bike: Bike) {
+        diskStorage.deleteBike(bike)
+        bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
+    }
+
     companion object {
         val TAG = "BeaconReference"
     }

@@ -24,4 +24,5 @@
     <string name="delete">delete</string>
     <string name="delete_confirmation">Are you sure you want to delete</string>
     <string name="edit">edit</string>
+    <string name="bike_deleted">was deleted</string>
 </resources>
