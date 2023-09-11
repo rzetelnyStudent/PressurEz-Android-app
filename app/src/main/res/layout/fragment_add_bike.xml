@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".AddBikeFragment">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +15,12 @@
     android:paddingLeft="5dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    tools:context=".AddBikeFragment">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+<!--    tools:context=".AddBikeFragment"-->
+<!--    app:behavior_hideable="false"-->
+<!--    app:behavior_peekHeight="62dp"-->
+
+
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
@@ -220,7 +232,7 @@
         android:layout_marginStart="9dp"/>
 
     </RelativeLayout>
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 <!--    <com.google.android.material.slider.Slider-->
 <!--        android:id="@+id/sensor_rear_low_press"-->
 <!--        android:layout_width="match_parent"-->
