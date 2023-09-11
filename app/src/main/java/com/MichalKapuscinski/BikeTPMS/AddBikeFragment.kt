@@ -31,7 +31,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
         binding.saveButton.setOnClickListener {
             saveAction()
         }
-        //dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
 //        dialog?.window?.decorView.system(
 //            view.system_ui_flag_layout_fullscreen
