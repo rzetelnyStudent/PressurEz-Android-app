@@ -85,3 +85,13 @@ fun validateLowPressureThreshold(inString: String?, resources: Resources): Pair<
     }
 }
 
+fun formatId(id: Int): String
+{
+    return String.format("%06X", id)
+}
+
+fun formatLowPressure(value: Int): String
+{
+    return String.format("%.2f", (value.toDouble() / MBAR_IN_BAR))
+}
+

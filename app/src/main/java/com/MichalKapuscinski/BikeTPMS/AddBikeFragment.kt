@@ -1,6 +1,5 @@
 package com.MichalKapuscinski.BikeTPMS
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +10,11 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.MichalKapuscinski.BikeTPMS.databinding.FragmentAddBikeBinding
 import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.ui.formatId
+import com.MichalKapuscinski.BikeTPMS.ui.formatLowPressure
 import com.MichalKapuscinski.BikeTPMS.ui.validateBikeName
 import com.MichalKapuscinski.BikeTPMS.ui.validateLowPressureThreshold
 import com.MichalKapuscinski.BikeTPMS.ui.validateSensorId
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -101,10 +100,10 @@ class AddBikeFragment : BottomSheetDialogFragment()
 
     private fun populateInputs(bike: Bike) {
         binding.bikeNameField.setText(bike.name)
-        binding.sensorFrontIdField.setText(bike.sensorFront.id.toString())
-        binding.sensorRearIdField.setText(bike.sensorRear.id.toString())
-        binding.sensorFrontLowPressureField.setText(bike.sensorFront.lowPressureTh.toString())
-        binding.sensorRearLowPressureField.setText(bike.sensorRear.lowPressureTh.toString())
+        binding.sensorFrontIdField.setText(formatId(bike.sensorFront.id))
+        binding.sensorRearIdField.setText(formatId(bike.sensorRear.id))
+        binding.sensorFrontLowPressureField.setText(formatLowPressure(bike.sensorFront.lowPressureTh))
+        binding.sensorRearLowPressureField.setText(formatLowPressure(bike.sensorRear.lowPressureTh))
     }
 
     private fun enableInputValidation() {
