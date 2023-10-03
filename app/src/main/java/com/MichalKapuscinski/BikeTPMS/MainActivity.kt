@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
+import com.MichalKapuscinski.BikeTPMS.models.Action
 import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.models.NavigationInfo
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.altbeacon.beacon.Beacon
@@ -54,12 +56,24 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
             launchAddEditBike(null)
         }
 
-        taskViewModel.bikeAddedOrEdited.observe(this){
-            val bike = it.first
-            if (bike != null && it?.second == true) {
+        taskViewModel.navInfo.observe(this){
+            val bike = it.bikeAddedOrEdited
+            if (bike != null && it.action == Action.ADDED_OR_EDITED) {
                 coreFunctionality.addEditBike(bike)
                 Toast.makeText(this,
-                    bike.name + " " + resources.getString(R.string.bike_added_toast),
+                    "${bike.name} ${resources.getString(R.string.bike_added_toast)}",
+                    Toast.LENGTH_SHORT).show()
+                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
+                binding.recyclerView.apply {
+                    layoutManager = GridLayoutManager(applicationContext, 1)
+                    adapter = myBikeListAdapter
+                }
+            }
+            else if (bike != null && it.action == Action.DELETED)
+            {
+                coreFunctionality.deleteBike(bike)
+                Toast.makeText(this,
+                    "${bike.name} ${resources.getString(R.string.bike_deleted)}",
                     Toast.LENGTH_SHORT).show()
                 myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
                 binding.recyclerView.apply {
@@ -144,10 +158,9 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
                         dialog.dismiss()
                     }
                     .setPositiveButton(R.string.delete) { dialog, _ ->
-                        coreFunctionality.deleteBike(bike)
+                        taskViewModel.navInfo.value = NavigationInfo(bike, Action.DELETED)
                         dialog.dismiss()
                         dialogParent.dismiss()
-                        Toast.makeText(this, "${bike.name} ${resources.getString(R.string.bike_deleted)}", Toast.LENGTH_SHORT).show()
                     }
                     .show()
             }
@@ -159,7 +172,7 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
     }
 
     private fun launchAddEditBike(bike: Bike?) {
-        taskViewModel.bikeAddedOrEdited.value = Pair(bike, false)
+        taskViewModel.navInfo.value = NavigationInfo(bike, Action.NOTHING)
         val addBikeFragment = AddBikeFragment()
         addBikeFragment.isCancelable = false     // temporarily
         addBikeFragment.show(supportFragmentManager, "newTaskTag")

@@ -9,7 +9,9 @@ import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.MichalKapuscinski.BikeTPMS.databinding.FragmentAddBikeBinding
+import com.MichalKapuscinski.BikeTPMS.models.Action
 import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.models.NavigationInfo
 import com.MichalKapuscinski.BikeTPMS.ui.formatId
 import com.MichalKapuscinski.BikeTPMS.ui.formatLowPressure
 import com.MichalKapuscinski.BikeTPMS.ui.validateBikeName
@@ -44,7 +46,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
         binding.closeButton.setOnClickListener {view ->
             showDiscardChangesDialog(view.context)
         }
-        val bike = myViewModel.bikeAddedOrEdited.value?.first
+        val bike = myViewModel.navInfo.value?.bikeAddedOrEdited
         if (bike == null) {
             clearInputs()     // not necessary
         } else {
@@ -82,10 +84,10 @@ class AddBikeFragment : BottomSheetDialogFragment()
     private fun saveAction()
     {
         // check all user inputs once again
-        val bike = validateAllInputs()
+        val bike = validateAllInputs(myViewModel.navInfo.value?.bikeAddedOrEdited)
         if (bike != null) {
             clearInputs()
-            myViewModel.bikeAddedOrEdited.value = Pair(bike, true)
+            myViewModel.navInfo.value = NavigationInfo(bike, Action.ADDED_OR_EDITED)
             dismiss()
         }
     }
@@ -124,7 +126,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
         }
     }
 
-    private fun validateAllInputs(): Bike? {
+    private fun validateAllInputs(editedBike: Bike?): Bike? {
         val bikeNameErrors = validateBikeName(binding.bikeNameField.text.toString(), resources)
         val sensorFrontIdErrors = validateSensorId(binding.sensorFrontIdField.text.toString(), resources)
         val sensorRearIdErrors = validateSensorId(binding.sensorRearIdField.text.toString(), resources)
@@ -143,6 +145,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
             && sensorFrontLowErrors.first == null
             && sensorRearLowErrors.first == null) {
             bike = Bike(
+                editedBike?.id ?: 0,
                 bikeNameErrors.second,
                 R.drawable.ic_bike,
                 sensorFrontIdErrors.second,
@@ -157,7 +160,7 @@ class AddBikeFragment : BottomSheetDialogFragment()
         MaterialAlertDialogBuilder(context)
             .setMessage(resources.getString(R.string.discard_changes_message))
             .setNegativeButton(resources.getString(R.string.discard)) { _, _ ->
-                myViewModel.bikeAddedOrEdited.value = null
+                myViewModel.navInfo.value = NavigationInfo(null, Action.NOTHING)
                 dismiss()
             }
             .setPositiveButton(resources.getString(R.string.continue_editing)) { dialog, _ ->
