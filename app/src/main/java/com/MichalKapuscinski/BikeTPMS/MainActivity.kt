@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_MyApplication)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
