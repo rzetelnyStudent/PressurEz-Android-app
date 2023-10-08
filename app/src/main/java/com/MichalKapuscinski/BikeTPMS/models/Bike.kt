@@ -20,6 +20,10 @@ data class Bike(
     var notificationState: NotificationState = NotificationState.NOT_VISIBLE
 ) {
 
+    fun isPressureLow() : Boolean {
+        return (sensorFront.isPressureLow() || sensorRear.isPressureLow())
+    }
+
     constructor(id: Int, name: String, appearance: Int, sensorFid: Int, sensorRid: Int, lowPressThreshF: Int, lowPressThreshR: Int):
             this(id, name, appearance, Sensor(sensorFid, lowPressThreshF), Sensor(sensorRid, lowPressThreshR), NotificationState.NOT_VISIBLE)
 
@@ -29,6 +33,9 @@ data class Bike(
     // Constructor just for Room to compile
     constructor(id: Int, name: String, appearance: Int, sensorFront: Sensor, sensorRear: Sensor):
             this(id, name, appearance, sensorFront, sensorRear, NotificationState.NOT_VISIBLE)
+
+    constructor(name: String, appearance: Int, sensorFid: Int, sensorRid: Int, lowPressThreshF: Int, lowPressThreshR: Int):
+            this(0, name, appearance, Sensor(sensorFid, lowPressThreshF), Sensor(sensorRid, lowPressThreshR), NotificationState.NOT_VISIBLE)
 }
 
 //    constructor(id: Int, lowPressureTh: Int) : this(id, lowPressureTh, null, null, null)

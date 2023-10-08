@@ -5,22 +5,28 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.MichalKapuscinski.BikeTPMS.beacon.permissions.BeaconScanPermissionsActivity
 import com.MichalKapuscinski.BikeTPMS.databinding.ActivityMainBinding
 import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
+import com.MichalKapuscinski.BikeTPMS.models.Action
+import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.models.NavigationInfo
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BikeClickListener {
 
     private lateinit var coreFunctionality: CoreFunctionality
-    var alertDialog: AlertDialog? = null
     private lateinit var binding: ActivityMainBinding
+    private lateinit var taskViewModel: MyViewModel
     lateinit var myBikeListAdapter: CardAdapter
 
 
@@ -31,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         coreFunctionality = application as CoreFunctionality
-        myBikeListAdapter = CardAdapter(coreFunctionality.bikeList)
+        myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 1)
             adapter = myBikeListAdapter
@@ -45,6 +51,37 @@ class MainActivity : AppCompatActivity() {
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
         regionViewModel.rangedBeacons.observe(this, rangingObserver)
 
+        taskViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+        binding.addBikeBtn.setOnClickListener {
+            launchAddEditBike(null)
+        }
+
+        taskViewModel.navInfo.observe(this){
+            val bike = it.bikeAddedOrEdited
+            if (bike != null && it.action == Action.ADDED_OR_EDITED) {
+                coreFunctionality.addEditBike(bike)
+                Toast.makeText(this,
+                    "${bike.name} ${resources.getString(R.string.bike_added_toast)}",
+                    Toast.LENGTH_SHORT).show()
+                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
+                binding.recyclerView.apply {
+                    layoutManager = GridLayoutManager(applicationContext, 1)
+                    adapter = myBikeListAdapter
+                }
+            }
+            else if (bike != null && it.action == Action.DELETED)
+            {
+                coreFunctionality.deleteBike(bike)
+                Toast.makeText(this,
+                    "${bike.name} ${resources.getString(R.string.bike_deleted)}",
+                    Toast.LENGTH_SHORT).show()
+                myBikeListAdapter = CardAdapter(coreFunctionality.bikeList, this)
+                binding.recyclerView.apply {
+                    layoutManager = GridLayoutManager(applicationContext, 1)
+                    adapter = myBikeListAdapter
+                }
+            }
+        }
     }
 
     override fun onPause() {
@@ -86,79 +123,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val rangingObserver = Observer<Collection<Beacon>> { beacons ->
+    private val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         // Log.d(TAG, "Ranged: ${beacons.count()} beacons")
         if (BeaconManager.getInstanceForApplication(this).rangedRegions.isNotEmpty()) {
             for (bike in coreFunctionality.bikeList) {
                 for (sensor in beacons) {
-                    if (bike.sensorFront.equalId(
-                            sensor.id1.toInt(),
-                            sensor.id2.toInt(),
-                            sensor.id3.toInt()
-                        )
-                    ) {    // exceptions!!!!
-                        bike.sensorFront.updateMeasurementFromAdvData(sensor.dataFields)
-                    } else {
-                        bike.sensorFront.setToNullData()
-                    }
-                    if (bike.sensorRear.equalId(
-                            sensor.id1.toInt(),
-                            sensor.id2.toInt(),
-                            sensor.id3.toInt()
-                        )
-                    ) {    // exceptions!!!!
-                        bike.sensorRear.updateMeasurementFromAdvData(sensor.dataFields)
-                    } else {
-                        bike.sensorRear.setToNullData()
-                    }
+                    bike.sensorFront.updateDataIfDetected(sensor)
+                    bike.sensorRear.updateDataIfDetected(sensor)
                 }
             }
             myBikeListAdapter.notifyDataSetChanged()
         }
     }
-
-//    fun rangingButtonTapped(view: View) {
-//        val beaconManager = BeaconManager.getInstanceForApplication(this)
-//        if (beaconManager.rangedRegions.size == 0) {
-//            beaconManager.startRangingBeacons(beaconReferenceApplication.region)
-//            rangingButton.text = "Stop Ranging"
-//            beaconCountTextView.text = "Ranging enabled -- awaiting first callback"
-//        } else {
-//            beaconManager.stopRangingBeacons(beaconReferenceApplication.region)
-//            rangingButton.text = "Start Ranging"
-//            beaconCountTextView.text = "Ranging disabled -- no beacons detected"
-//            beaconListView.adapter =
-//                ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("--"))
-//        }
-//    }
-//
-//    fun monitoringButtonTapped(view: View) {
-//        var dialogTitle = ""
-//        var dialogMessage = ""
-//        val beaconManager = BeaconManager.getInstanceForApplication(this)
-//        if (beaconManager.monitoredRegions.size == 0) {
-//            beaconManager.startMonitoring(beaconReferenceApplication.region)
-//            dialogTitle = "Beacon monitoring started."
-//            dialogMessage =
-//                "You will see a dialog if a beacon is detected, and another if beacons then stop being detected."
-//            monitoringButton.text = "Stop Monitoring"
-//
-//        } else {
-//            beaconManager.stopMonitoring(beaconReferenceApplication.region)
-//            dialogTitle = "Beacon monitoring stopped."
-//            dialogMessage = "You will no longer see dialogs when becaons start/stop being detected."
-//            monitoringButton.text = "Start Monitoring"
-//        }
-//        val builder =
-//            AlertDialog.Builder(this)
-//        builder.setTitle(dialogTitle)
-//        builder.setMessage(dialogMessage)
-//        builder.setPositiveButton(android.R.string.ok, null)
-//        alertDialog?.dismiss()
-//        alertDialog = builder.create()
-//        alertDialog?.show()
-//
-//    }
 
 
     companion object {
@@ -167,6 +143,39 @@ class MainActivity : AppCompatActivity() {
         val PERMISSION_REQUEST_BLUETOOTH_SCAN = 1
         val PERMISSION_REQUEST_BLUETOOTH_CONNECT = 2
         val PERMISSION_REQUEST_FINE_LOCATION = 3
+    }
+
+    override fun onClick(bike: Bike) {
+        MaterialAlertDialogBuilder(this)
+            .setMessage("${resources.getString(R.string.what_to_do_with_bike)} ${bike.name}")
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.delete) { dialogParent, _ ->
+                MaterialAlertDialogBuilder(this)
+                    .setMessage("${resources.getString(R.string.delete_confirmation)} ${bike.name}?")
+                    .setNeutralButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(R.string.delete) { dialog, _ ->
+                        taskViewModel.navInfo.value = NavigationInfo(bike, Action.DELETED)
+                        dialog.dismiss()
+                        dialogParent.dismiss()
+                    }
+                    .show()
+            }
+            .setPositiveButton(R.string.edit) { dialog, _ ->
+                dialog.dismiss()
+                launchAddEditBike(bike)
+            }
+            .show()
+    }
+
+    private fun launchAddEditBike(bike: Bike?) {
+        taskViewModel.navInfo.value = NavigationInfo(bike, Action.NOTHING)
+        val addBikeFragment = AddBikeFragment()
+        addBikeFragment.isCancelable = false     // temporarily
+        addBikeFragment.show(supportFragmentManager, "newTaskTag")
     }
 
 }

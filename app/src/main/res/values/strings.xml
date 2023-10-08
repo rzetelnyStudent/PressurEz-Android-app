@@ -7,5 +7,23 @@
     <string name="pressure_unit">bar</string>
     <string name="temp_unit">°C</string>
     <string name="bat_unit">%</string>
-    <string name="editbtn">editBtn</string>
+    <string name="discard_changes_message">Discard changes?</string>
+    <string name="discard">Discard</string>
+    <string name="continue_editing">Continue editing</string>
+    <string name="too_long_name">Max 20 chars</string>
+    <string name="empty_bike_name">Name is required</string>
+    <string name="empty_id">Id is required</string>
+    <string name="wrong_length_id">Need 6 chars</string>
+    <string name="wrong_format_id">0-9, a-f only</string>
+    <string name="threshold_helper_text">Pressure in bar</string>
+    <string name="empty_field">Field is required</string>
+    <string name="threshold_invalid_value">0 - 6 bar only</string>
+    <string name="bike_added_toast">was saved</string>
+    <string name="what_to_do_with_bike">bike</string>
+    <string name="cancel">cancel</string>
+    <string name="delete">delete</string>
+    <string name="delete_confirmation">Are you sure you want to delete</string>
+    <string name="edit">edit</string>
+    <string name="bike_deleted">was deleted</string>
+    <string name="warning_icon">⚠</string>
 </resources>

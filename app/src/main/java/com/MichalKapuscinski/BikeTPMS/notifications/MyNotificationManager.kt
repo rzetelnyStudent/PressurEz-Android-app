@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.models.Bike
@@ -36,8 +37,10 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
     }
 
     private fun sendNotification(bike: Bike) {
-        val builder = NotificationCompat.Builder(context, channelId)
+        val builder = NotificationCompat.Builder(context, channelId)    // .setCategory(Notification.CATEGORY_STATUS)
+            .setSubText(if (bike.isPressureLow()) {"⚠"} else {null})
             .setSmallIcon(bike.appearance)
+            .setShowWhen(false)
             .setContentTitle(bike.name)
             .setContentText("Rear: ${formatNullablePressure(bike.sensorRear.pressureBar)}bar, Front: ${formatNullablePressure(bike.sensorFront.pressureBar)}bar")
             .setOnlyAlertOnce(true)
@@ -92,6 +95,7 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
                     }
                     else {
                         deleteNotification(bike)
+                        Log.d("noti", "deleting notification")
                     }
                 } else {     // it means the notification was dismissed
                     bike.notificationState = NotificationState.DISMISSED
