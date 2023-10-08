@@ -77,11 +77,11 @@ class PermissionsHelper(val context: Context) {
     }
     fun beaconScanPermissionGroupsNeeded(backgroundAccessRequested: Boolean = false): List<Array<String>> {
         val permissions = ArrayList<Array<String>>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             // As of version M (6) we need FINE_LOCATION (or COARSE_LOCATION, but we ask for FINE)
             permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             // As of version Q (10) we need FINE_LOCATION and BACKGROUND_LOCATION
             if (backgroundAccessRequested) {
                 permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
@@ -92,7 +92,10 @@ class PermissionsHelper(val context: Context) {
             // Manifest.permission.BLUETOOTH_CONNECT is not absolutely required to do just scanning,
             // but it is required if you want to access some info from the scans like the device name
             // and the aditional cost of requsting this access is minimal, so we just request it
-            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))
+            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN))
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
         }
         return permissions
     }
@@ -187,6 +190,7 @@ open class BeaconScanPermissionsActivity: PermissionsActivity()  {
         bundle.putString(Manifest.permission.ACCESS_FINE_LOCATION, "Location")
         bundle.putString(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "Background Location")
         bundle.putString(Manifest.permission.BLUETOOTH_SCAN, "Bluetooth")
+        bundle.putString(Manifest.permission.POST_NOTIFICATIONS, "Notifications")
         return bundle
     }
 

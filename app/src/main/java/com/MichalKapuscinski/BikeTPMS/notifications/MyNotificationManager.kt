@@ -21,7 +21,6 @@ import com.MichalKapuscinski.BikeTPMS.ui.resourceUri
 
 class MyNotificationManager(context: Context, channelName: String, channelDescription: String) {
     private val channelId = channelName + "e"   // temporary fix, resetting channel would be the best
-    //private val context = context
 
     init {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
