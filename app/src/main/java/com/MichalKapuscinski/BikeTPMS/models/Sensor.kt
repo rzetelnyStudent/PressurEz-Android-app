@@ -30,6 +30,16 @@ data class Sensor(
     constructor(id: Int, lowPressureTh: Int) : this(id, lowPressureTh, null, null, null)
 
     @Ignore
+    fun isPressureLow() : Boolean {
+        val pressure = pressureBar
+        return if (pressure != null) {
+            (pressure < lowPressureTh)
+        }
+        else {
+            false
+        }
+    }
+    @Ignore
     public fun updateDataIfDetected(beacon: Beacon): Boolean {
         return try {
             if (equalId(beacon.id1.toInt(), beacon.id2.toInt(), beacon.id3.toInt())) {
