@@ -1,6 +1,9 @@
 package com.MichalKapuscinski.BikeTPMS.ui
 
+import android.content.ContentResolver
+import android.content.Context
 import android.content.res.Resources
+import android.net.Uri
 import com.MichalKapuscinski.BikeTPMS.R
 
 const val MAX_BIKE_NAME_LENGTH = 20
@@ -93,5 +96,14 @@ fun formatId(id: Int): String
 fun formatLowPressure(value: Int): String
 {
     return String.format("%.2f", (value.toDouble() / MBAR_IN_BAR))
+}
+
+fun Context.resourceUri(resourceId: Int): Uri = with(resources) {
+    Uri.Builder()
+        .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+        .authority(getResourcePackageName(resourceId))
+        .appendPath(getResourceTypeName(resourceId))
+        .appendPath(getResourceEntryName(resourceId))
+        .build()
 }
 

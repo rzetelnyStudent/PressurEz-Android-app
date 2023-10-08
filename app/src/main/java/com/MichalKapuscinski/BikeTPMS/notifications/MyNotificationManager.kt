@@ -8,20 +8,26 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.media.AudioAttributes
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.MichalKapuscinski.BikeTPMS.MainActivity
+import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.ui.formatNullablePressure
+import com.MichalKapuscinski.BikeTPMS.ui.resourceUri
 
 
 class MyNotificationManager(context: Context, channelName: String, channelDescription: String) {
-    private val channelId = channelName
-    private val context = context
+    private val channelId = channelName + "e"   // temporary fix, resetting channel would be the best
+    //private val context = context
 
     init {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            val notificationManager =
+                context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
             val notificationChannel = NotificationChannel(
                 channelId,
                 channelName,
@@ -29,18 +35,22 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
             )
             notificationChannel.description = channelDescription
             notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            val audioAttributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build()
+            notificationChannel.setSound(context.resourceUri(R.raw.ok_sound), audioAttributes)
 
-            val notificationManager =
-                context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
 
-    private fun sendNotification(bike: Bike) {
+    private fun sendNotification(bike: Bike, context: Context) {
+
         val builder = NotificationCompat.Builder(context, channelId)    // .setCategory(Notification.CATEGORY_STATUS)
-            .setSubText(if (bike.isPressureLow()) {"⚠"} else {null})
-            .setSmallIcon(bike.appearance)
-            .setShowWhen(false)
+            .setSubText(if (bike.isPressureLow()) {context.getString(R.string.warning_icon)} else {null})
+            .setSmallIcon(R.drawable.ic_bike)
+            .setSilent(!bike.isPressureLow())
             .setContentTitle(bike.name)
             .setContentText("Rear: ${formatNullablePressure(bike.sensorRear.pressureBar)}bar, Front: ${formatNullablePressure(bike.sensorFront.pressureBar)}bar")
             .setOnlyAlertOnce(true)
@@ -55,15 +65,9 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
 
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(bike.id, builder.build())
-
-
-        //notificationCreated = true
-        //with(NotificationManagerCompat.from(context)) {
-        //    notify(notificationId, builder.build())
-        //}
     }
 
-    private fun isNotificationVisible(bike: Bike): Boolean {
+    private fun isNotificationVisible(bike: Bike, context: Context): Boolean {
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notifications = notificationManager.activeNotifications
         for (notification in notifications) {
@@ -80,32 +84,35 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
         }
     }
 
-    fun postNotificationConditionally(bike: Bike, isForeground: Boolean) {
-        when (bike.notificationState) {
-            NotificationState.NOT_VISIBLE -> {
-                if (!isForeground) {
-                    sendNotification(bike)
-                    bike.notificationState = NotificationState.VISIBLE
-                }
-            }
-            NotificationState.VISIBLE -> {
-                if (isNotificationVisible(bike)) {
+    fun postNotificationConditionally(bike: Bike, isForeground: Boolean, context: Context) {
+        if (bike.hasPressureChanged()) {
+            when (bike.notificationState) {
+                NotificationState.NOT_VISIBLE -> {
                     if (!isForeground) {
-                        sendNotification(bike)     // actually update a notification                       
+                        sendNotification(bike, context)
+                        bike.notificationState = NotificationState.VISIBLE
                     }
-                    else {
-                        deleteNotification(bike)
-                        Log.d("noti", "deleting notification")
-                    }
-                } else {     // it means the notification was dismissed
-                    bike.notificationState = NotificationState.DISMISSED
                 }
+
+                NotificationState.VISIBLE -> {
+                    if (isNotificationVisible(bike, context)) {
+                        if (!isForeground) {
+                            sendNotification(bike, context)     // actually update a notification
+                        } else {
+                            deleteNotification(bike, context)
+                            //Log.d("noti", "deleting notification")
+                        }
+                    } else {     // it means the notification was dismissed
+                        bike.notificationState = NotificationState.DISMISSED
+                    }
+                }
+
+                NotificationState.DISMISSED -> {}     // could check here if some sort of timeout passed since the notification was dismissed
             }
-            NotificationState.DISMISSED -> {}     // could check here if some sort of timeout passed since the notification was dismissed
         }
     }
 
-    private fun deleteNotification(bike: Bike) {
+    private fun deleteNotification(bike: Bike, context: Context) {
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(bike.id)
     }
