@@ -102,11 +102,7 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         // The code needed to get these permissions has become increasingly complex, so it is in
         // its own file so as not to clutter this file focussed on how to use the library.
 
-        if (!BeaconScanPermissionsActivity.allPermissionsGranted(
-                this,
-                true
-            )
-        ) {
+        if (!BeaconScanPermissionsActivity.allPermissionsGranted(this,true)) {
             val intent = Intent(this, BeaconScanPermissionsActivity::class.java)
             intent.putExtra("backgroundAccessRequested", true)
             startActivity(intent)

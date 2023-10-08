@@ -79,12 +79,12 @@ class PermissionsHelper(val context: Context) {
         val permissions = ArrayList<Array<String>>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // As of version M (6) we need FINE_LOCATION (or COARSE_LOCATION, but we ask for FINE)
-            permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
+            //permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // As of version Q (10) we need FINE_LOCATION and BACKGROUND_LOCATION
             if (backgroundAccessRequested) {
-                permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+                //permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -92,7 +92,8 @@ class PermissionsHelper(val context: Context) {
             // Manifest.permission.BLUETOOTH_CONNECT is not absolutely required to do just scanning,
             // but it is required if you want to access some info from the scans like the device name
             // and the aditional cost of requsting this access is minimal, so we just request it
-            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))
+            //permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))
+            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN))
         }
         return permissions
     }
@@ -184,8 +185,8 @@ open class BeaconScanPermissionsActivity: PermissionsActivity()  {
     @SuppressLint("InlinedApi")
     fun getDefaultPermissionTitlesBundle(): Bundle {
         val bundle = Bundle()
-        bundle.putString(Manifest.permission.ACCESS_FINE_LOCATION, "Location")
-        bundle.putString(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "Background Location")
+       // bundle.putString(Manifest.permission.ACCESS_FINE_LOCATION, "Location")
+       // bundle.putString(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "Background Location")
         bundle.putString(Manifest.permission.BLUETOOTH_SCAN, "Bluetooth")
         return bundle
     }
