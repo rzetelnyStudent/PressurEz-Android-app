@@ -14,10 +14,16 @@ class CardViewHolder(
         cardCellBinding.bikeIcon.setImageResource(R.drawable.ic_bike)
         cardCellBinding.bikeName.text = bike.name
         cardCellBinding.pressureFront.text = formatNullablePressure(bike.sensorFront.pressureBar)
+        val frontColor = if (bike.sensorFront.isPressureLow()) {cardCellBinding.pressureFront.context.getColor(R.color.errorRed)} else {cardCellBinding.pressureFront.context.getColor(R.color.black)}
+        cardCellBinding.pressureFront.setTextColor(frontColor)
+        cardCellBinding.pressureUnitFront.setTextColor(frontColor)
         cardCellBinding.temperatureFront.text = formatNullableTemp(bike.sensorFront.temperatureC)
         cardCellBinding.batteryFront.text = formatNullableBat(bike.sensorFront.battery)
 
+        val rearColor = if (bike.sensorRear.isPressureLow()) {cardCellBinding.pressureRear.context.getColor(R.color.errorRed)} else {cardCellBinding.pressureRear.context.getColor(R.color.black)}
         cardCellBinding.pressureRear.text = formatNullablePressure(bike.sensorRear.pressureBar)
+        cardCellBinding.pressureRear.setTextColor(rearColor)
+        cardCellBinding.pressureUnitRear.setTextColor(rearColor)
         cardCellBinding.temperatureRear.text = formatNullableTemp(bike.sensorRear.temperatureC)
         cardCellBinding.batteryRear.text = formatNullableBat(bike.sensorRear.battery)
         cardCellBinding.cardView.setOnClickListener{

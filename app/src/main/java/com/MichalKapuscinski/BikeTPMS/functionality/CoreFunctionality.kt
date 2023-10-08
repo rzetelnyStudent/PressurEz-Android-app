@@ -101,7 +101,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
                 }
             }
             if (sensorDetected[0] || sensorDetected[1]) {
-                myNotificationManager.postNotificationConditionally(bike, isForeground)
+                myNotificationManager.postNotificationConditionally(bike, isForeground, this)
             }
         }
     }

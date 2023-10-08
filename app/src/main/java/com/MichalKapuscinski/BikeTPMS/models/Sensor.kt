@@ -22,9 +22,13 @@ data class Sensor(
     @Ignore
     var pressureBar: Int? = null,
     @Ignore
+    var prevPressureBar: Int? = null,
+    @Ignore
     var temperatureC: Int? = null,
     @Ignore
-    var battery: Byte? = null
+    var battery: Byte? = null,
+    @Ignore
+    val PRESSURE_DELTA: Int = 200
 ) {
 
     constructor(id: Int, lowPressureTh: Int) : this(id, lowPressureTh, null, null, null)
@@ -39,6 +43,20 @@ data class Sensor(
             false
         }
     }
+
+    @Ignore
+    fun hasPressureChanged() : Boolean {
+        val pressure = pressureBar
+        val prevPressure = prevPressureBar
+        return if (pressure != null && prevPressure == null) {
+            true
+        } else if (pressure != null && prevPressure != null) {
+            kotlin.math.abs(prevPressure - pressure) > PRESSURE_DELTA
+        } else {
+            false
+        }
+    }
+
     @Ignore
     public fun updateDataIfDetected(beacon: Beacon): Boolean {
         return try {
@@ -55,8 +73,9 @@ data class Sensor(
 
     @Ignore
     private fun updateMeasurementFromAdvData(advData: List<Long>, protocolVer: ProtocolVer) {
+        prevPressureBar = pressureBar
         pressureBar = if (protocolVer == ProtocolVer.OLD) { advData[0].toInt() / 100 } else { advData[0].toInt() }
-        temperatureC = advData[1].toInt()
+        temperatureC = advData[1].toShort().toInt()
         battery = advData[2].toByte()
 
         //Log.d("Moje", "pressure:" + pressureBar.toString())

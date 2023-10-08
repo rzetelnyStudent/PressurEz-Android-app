@@ -5,4 +5,5 @@
     <color name="mint">#3EB489</color>
     <color name="veryLightMint">#e9f5f0</color>
     <color name="veryLightGrey">#F3F3F9</color>
+    <color name="errorRed">#940C01</color>
 </resources>
