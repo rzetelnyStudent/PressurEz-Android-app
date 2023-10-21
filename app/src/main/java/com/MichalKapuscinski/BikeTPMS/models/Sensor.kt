@@ -74,7 +74,7 @@ data class Sensor(
     @Ignore
     private fun updateMeasurementFromAdvData(advData: List<Long>, protocolVer: ProtocolVer) {
         prevPressureBar = pressureBar
-        pressureBar = if (protocolVer == ProtocolVer.OLD) { advData[0].toInt() / 100 } else { advData[0].toInt() }
+        pressureBar = if (protocolVer == ProtocolVer.OLD) { advData[0].toInt() / 100 } else { (advData[0] * 10).toInt() }
         temperatureC = advData[1].toShort().toInt()
         battery = advData[2].toByte()
 
