@@ -123,6 +123,10 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         bikeList = diskStorage.readBikesFromDisk() as MutableList<Bike>
     }
 
+    fun isBleEnabled(): Boolean {
+        return bleScanner.isBleEnabled()
+    }
+
     companion object {
         val TAG = "BeaconReference"
     }

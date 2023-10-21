@@ -26,4 +26,7 @@
     <string name="edit">edit</string>
     <string name="bike_deleted">was deleted</string>
     <string name="warning_icon">⚠</string>
+    <string name="turn_ble_title">Bluetooth is OFF</string>
+    <string name="turn_ble_message">You will be linked to settings to turn the Bluetooth ON</string>
+    <string name="ok">OK</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.BeaconParser
+import org.altbeacon.beacon.BleNotAvailableException
 import org.altbeacon.beacon.Region
 
 class BleScanner(_beaconManager: BeaconManager, _region: Region) {
@@ -71,6 +72,15 @@ class BleScanner(_beaconManager: BeaconManager, _region: Region) {
         beaconManager.setBackgroundBetweenScanPeriod(0);
         beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)
+    }
+
+    fun isBleEnabled(): Boolean {
+        return try {
+            beaconManager.checkAvailability()
+        }
+        catch (e: BleNotAvailableException) {
+            false
+        }
     }
 
 }

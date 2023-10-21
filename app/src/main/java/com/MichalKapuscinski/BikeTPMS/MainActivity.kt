@@ -1,11 +1,16 @@
 package com.MichalKapuscinski.BikeTPMS
 
+import android.Manifest
 import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,6 +21,9 @@ import com.MichalKapuscinski.BikeTPMS.models.Action
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.models.NavigationInfo
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
+import com.MichalKapuscinski.BikeTPMS.ui.REQUEST_ENABLE_BT
+//import com.MichalKapuscinski.BikeTPMS.utility.Navigation
+import com.MichalKapuscinski.BikeTPMS.utility.linkToSettingsIfBtOff
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -44,6 +52,10 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
             adapter = myBikeListAdapter
         }
         lifecycle.addObserver(coreFunctionality)
+
+
+        //val settingsIntent = Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
+        //startActivity(settingsIntent)
         // Set up a Live Data observer for beacon data
         val regionViewModel = BeaconManager.getInstanceForApplication(this)
             .getRegionViewModel(coreFunctionality.region)
@@ -51,6 +63,8 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         regionViewModel.regionState.observe(this, monitoringObserver)
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
         regionViewModel.rangedBeacons.observe(this, rangingObserver)
+
+        linkToSettingsIfBtOff(coreFunctionality.isBleEnabled())
 
         taskViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         binding.addBikeBtn.setOnClickListener {
@@ -173,6 +187,11 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         val addBikeFragment = AddBikeFragment()
         addBikeFragment.isCancelable = false     // temporarily
         addBikeFragment.show(supportFragmentManager, "newTaskTag")
+    }
+
+
+    private fun enableBT() {
+
     }
 
 }
