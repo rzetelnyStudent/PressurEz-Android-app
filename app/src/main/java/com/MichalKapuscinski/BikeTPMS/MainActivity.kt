@@ -65,8 +65,6 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         regionViewModel.regionState.observe(this, monitoringObserver)
         regionViewModel.rangedBeacons.observe(this, rangingObserver)
 
-        linkToSettingsIfBtOff(coreFunctionality.isBleEnabled())
-
         taskViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         binding.addBikeBtn.setOnClickListener {
             launchAddEditBike(null)
@@ -108,7 +106,9 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         //    Manifest.permission.ACCESS_FINE_LOCATION
         //    Manifest.permission.ACCESS_BACKGROUND_LOCATION
         //    Manifest.permission.POST_NOTIFICATIONS
+        linkToSettingsIfBtOff(coreFunctionality.isBleEnabled())
         promptConditionallyForPermissions()
+        conditionallyLinkToBatterySettings()
     }
 
     private val monitoringObserver = Observer<Int> { state ->

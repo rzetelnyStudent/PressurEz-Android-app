@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.PowerManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.MichalKapuscinski.BikeTPMS.models.Bike
@@ -90,5 +91,11 @@ object PermissionsHelper {
             grantingInfo.registerState(isPermissionGranted(context, permission))
         }
         return grantingInfo.isCorrect()
+    }
+
+    fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+        val powerManager = context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val name = context.applicationContext.packageName
+        return powerManager.isIgnoringBatteryOptimizations(name)
     }
 }
