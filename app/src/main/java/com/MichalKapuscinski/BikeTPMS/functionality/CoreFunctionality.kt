@@ -51,7 +51,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 
         myNotificationManager = MyNotificationManager(this, "Pressure notifications", "Notifications shown and updated when a bike is detected")
         beaconManager = BeaconManager.getInstanceForApplication(this)
-        //BeaconManager.setDebug(true)
+        BeaconManager.setDebug(true)
         region = Region("all-beacons", null, null, null)
         bleScanner = BleScanner(beaconManager, region)
         if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
@@ -136,6 +136,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     }
 
     fun startScan() {
+        bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
         bleScanner.stopBackgroundStartForegroundScan()
     }
 
