@@ -9,6 +9,8 @@ import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.disk.storage.DiskStorage
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.notifications.MyNotificationManager
+import com.MichalKapuscinski.BikeTPMS.permissions.PermissionGroup
+import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
 import org.altbeacon.beacon.*
 
 class CoreFunctionality: Application(), DefaultLifecycleObserver {
@@ -23,14 +25,18 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         isForeground = true
-        bleScanner.stopBackgroundStartForegroundScan()
+        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
+            bleScanner.stopBackgroundStartForegroundScan()
+        }
         //Log.d("aa", "onStart: $owner")
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         isForeground = false
-        bleScanner.stopForegroundStartBackgroundScan()
+        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
+            bleScanner.stopForegroundStartBackgroundScan()
+        }
         //Log.d("aa", "onStop: $owner")
     }
 
@@ -45,10 +51,12 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 
         myNotificationManager = MyNotificationManager(this, "Pressure notifications", "Notifications shown and updated when a bike is detected")
         beaconManager = BeaconManager.getInstanceForApplication(this)
-        BeaconManager.setDebug(true)
+        //BeaconManager.setDebug(true)
         region = Region("all-beacons", null, null, null)
         bleScanner = BleScanner(beaconManager, region)
-        bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
+        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
+            bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
+        }
     }
 
 //    fun setupForegroundService() {
@@ -125,6 +133,10 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 
     fun isBleEnabled(): Boolean {
         return bleScanner.isBleEnabled()
+    }
+
+    fun startScan() {
+        bleScanner.stopBackgroundStartForegroundScan()
     }
 
     companion object {
