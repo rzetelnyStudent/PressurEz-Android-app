@@ -75,6 +75,11 @@ class BleScanner(_beaconManager: BeaconManager, _region: Region) {
         beaconManager.startRangingBeacons(region)
     }
 
+    fun stop() {
+        beaconManager.stopRangingBeacons(region)
+        beaconManager.stopMonitoring(region)
+    }
+
     fun isBleEnabled(): Boolean {
         return try {
             beaconManager.checkAvailability()

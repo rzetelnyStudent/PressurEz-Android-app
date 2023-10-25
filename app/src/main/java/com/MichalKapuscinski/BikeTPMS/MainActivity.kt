@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
                 allGranted.registerState(permissionResult)
             }
             if (allGranted.isCorrect()) {
+                promptConditionallyForBackgroundLocation()
                 coreFunctionality.startScan()
             }
         }

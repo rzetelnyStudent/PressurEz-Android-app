@@ -1,12 +1,8 @@
 package com.MichalKapuscinski.BikeTPMS
 
-import android.app.AlertDialog
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.MichalKapuscinski.BikeTPMS.models.ValidationInfo
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionGroup
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
@@ -32,12 +28,33 @@ fun MainActivity.linkToSettingsIfBtOff(btOn: Boolean) {
 }
 
 
+fun MainActivity.promptConditionallyForBackgroundLocation() {
+    val permission = PermissionsHelper.isNeededNotGrantedBackgroundLoc()
+    if (permission != null) {
+        if (shouldShowRequestPermissionRationale(permission)) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.location_request_title)
+                .setMessage(R.string.location_request_message)
+                .setIcon(R.drawable.baseline_location_on_24)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    dialog.dismiss()
+                    requestPermissionsLauncher.launch(arrayOf(permission))
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+}
+
+
 fun MainActivity.promptConditionallyForPermissions() {
-    val notGrantedPermissions = PermissionsHelper.getNotGrantedPermissions(this, PermissionGroup.SCANNING)
+    val notGrantedPermissions = PermissionsHelper.getNotGrantedRationalePermissions(this, PermissionGroup.ALL)
     if (notGrantedPermissions.isNotEmpty()) {
         val showRationaleForAll = ValidationInfo()
         for (permission in notGrantedPermissions) {
-            showRationaleForAll.registerState(shouldShowRequestPermissionRationale(notGrantedPermissions.first()))
+            showRationaleForAll.registerState(shouldShowRequestPermissionRationale(permission))
         }
         if (showRationaleForAll.isCorrect()) {
             requestPermissionsLauncher.launch(notGrantedPermissions)

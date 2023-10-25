@@ -29,4 +29,6 @@
     <string name="turn_ble_title">Bluetooth is OFF</string>
     <string name="turn_ble_message">Turn it ON?</string>
     <string name="ok">OK</string>
+    <string name="location_request_title">Location all the time permission</string>
+    <string name="location_request_message">This permission is needed for notifying about pressure. Would you like to grant it?</string>
 </resources>

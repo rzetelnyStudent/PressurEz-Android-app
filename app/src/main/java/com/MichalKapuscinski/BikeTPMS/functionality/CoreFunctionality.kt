@@ -34,9 +34,9 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         isForeground = false
-        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
-            bleScanner.stopForegroundStartBackgroundScan()
-        }
+//        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
+//            bleScanner.stopForegroundStartBackgroundScan()
+//        }
         //Log.d("aa", "onStop: $owner")
     }
 
@@ -136,6 +136,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     }
 
     fun startScan() {
+        bleScanner.stop()
         bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
         bleScanner.stopBackgroundStartForegroundScan()
     }
