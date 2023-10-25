@@ -1,9 +1,14 @@
 package com.MichalKapuscinski.BikeTPMS.ui
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.ContextCompat.getSystemService
 import com.MichalKapuscinski.BikeTPMS.R
 
 const val MAX_BIKE_NAME_LENGTH = 20
@@ -106,4 +111,14 @@ fun Context.resourceUri(resourceId: Int): Uri = with(resources) {
         .appendPath(getResourceEntryName(resourceId))
         .build()
 }
+
+val REQUEST_ENABLE_BT = 1
+//fun enableBluetooth(context: Context) {
+//    val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
+//    val bluetoothAdapter = bluetoothManager.adapter
+//    if (bluetoothAdapter?.isEnabled == false) {
+//        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+//        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+//    }
+//}
 
