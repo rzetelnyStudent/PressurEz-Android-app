@@ -108,7 +108,6 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         //    Manifest.permission.POST_NOTIFICATIONS
         linkToSettingsIfBtOff(coreFunctionality.isBleEnabled())
         promptConditionallyForPermissions()
-        conditionallyLinkToBatterySettings()
     }
 
     private val monitoringObserver = Observer<Int> { state ->

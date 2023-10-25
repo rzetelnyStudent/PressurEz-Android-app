@@ -33,7 +33,7 @@ class BleScanner(_beaconManager: BeaconManager, _region: Region) {
         // you can use the library's built-in foreground service to unlock this behavior on Android
         // 8+.   the method below shows how you set that up.
         //setupForegroundService()
-        //beaconManager.setEnableScheduledScanJobs(false)
+        beaconManager.setEnableScheduledScanJobs(true)
         //beaconManager.setBackgroundScanPeriod(1100)
         //beaconManager.setBackgroundBetweenScanPeriod(0)
 
@@ -58,6 +58,7 @@ class BleScanner(_beaconManager: BeaconManager, _region: Region) {
     public fun stopForegroundStartBackgroundScan() {
         beaconManager.stopRangingBeacons(region)
         beaconManager.stopMonitoring(region)
+        beaconManager.setEnableScheduledScanJobs(true)
         beaconManager.setIntentScanningStrategyEnabled(true)
         beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)

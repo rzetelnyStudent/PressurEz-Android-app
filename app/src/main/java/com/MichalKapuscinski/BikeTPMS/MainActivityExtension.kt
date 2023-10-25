@@ -44,17 +44,3 @@ fun MainActivity.promptConditionallyForPermissions() {
         }
     }
 }
-
-fun MainActivity.conditionallyLinkToBatterySettings() {
-    if (!PermissionsHelper.isIgnoringBatteryOptimizations(this)) {
-        //val name = resources.getString(R.string.app_name)
-        //Toast.makeText(applicationContext, "Battery optimization -> All apps -> $name -> Don't optimize", Toast.LENGTH_LONG).show()
-        //val intent = Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-        //startActivity(intent)
-
-        val intent = Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-        intent.data = Uri.parse("package:" + packageName)
-        startActivity(intent)
-        //startActivityForResult(intent, IGNORE_BATTERY_OPTIMIZATION_REQUEST)
-    }
-}

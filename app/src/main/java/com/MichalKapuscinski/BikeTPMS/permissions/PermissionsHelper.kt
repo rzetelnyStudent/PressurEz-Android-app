@@ -92,10 +92,4 @@ object PermissionsHelper {
         }
         return grantingInfo.isCorrect()
     }
-
-    fun isIgnoringBatteryOptimizations(context: Context): Boolean {
-        val powerManager = context.applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val name = context.applicationContext.packageName
-        return powerManager.isIgnoringBatteryOptimizations(name)
-    }
 }
