@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.disk.storage.DiskStorage
 import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.models.ValidationInfo
 import com.MichalKapuscinski.BikeTPMS.notifications.MyNotificationManager
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionGroup
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
@@ -98,18 +99,14 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
     private val centralRangingObserver = Observer<Collection<Beacon>> { sensors ->
         // Log.d("aaa", "Ranged: ${sensors.count()} beacons")
         for (bike: Bike in bikeList) {
-            val sensorDetected = booleanArrayOf(false, false)
+            val sensorDetected = ValidationInfo()
             for (sensorF in sensors) {
-                if (bike.sensorFront.updateDataIfDetected(sensorF)) {
-                    sensorDetected[0] = true
-                }
+                sensorDetected.registerState(bike.sensorFront.updateDataIfDetected(sensorF))
             }
             for (sensorR in sensors) {
-                if (bike.sensorRear.updateDataIfDetected(sensorR)) {
-                    sensorDetected[1] = true
-                }
+                sensorDetected.registerState(bike.sensorRear.updateDataIfDetected(sensorR))
             }
-            if (sensorDetected[0] || sensorDetected[1]) {
+            if (sensorDetected.isCorrect()) {
                 myNotificationManager.postNotificationConditionally(bike, isForeground, this)
             }
         }

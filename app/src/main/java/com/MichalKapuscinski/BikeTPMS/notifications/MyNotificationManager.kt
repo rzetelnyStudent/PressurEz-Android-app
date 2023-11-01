@@ -15,6 +15,8 @@ import androidx.core.app.NotificationCompat
 import com.MichalKapuscinski.BikeTPMS.MainActivity
 import com.MichalKapuscinski.BikeTPMS.R
 import com.MichalKapuscinski.BikeTPMS.models.Bike
+import com.MichalKapuscinski.BikeTPMS.permissions.PermissionGroup
+import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
 import com.MichalKapuscinski.BikeTPMS.ui.formatNullablePressure
 import com.MichalKapuscinski.BikeTPMS.ui.resourceUri
 
@@ -45,25 +47,32 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
     }
 
     private fun sendNotification(bike: Bike, context: Context) {
+        if (PermissionsHelper.allPermissionsGranted(context, PermissionGroup.NOTIFICATIONS)) {
+            val builder = NotificationCompat.Builder(context, channelId)    // .setCategory(Notification.CATEGORY_STATUS)
+                .setSubText(if (bike.isPressureLow()) { context.getString(R.string.warning_icon) } else { null })
+                .setSmallIcon(R.drawable.ic_bike)
+                .setSilent(!bike.isPressureLow())
+                .setContentTitle(bike.name)
+                .setContentText(
+                    "Rear: ${formatNullablePressure(bike.sensorRear.pressureBar)}bar, Front: ${
+                        formatNullablePressure(
+                            bike.sensorFront.pressureBar
+                        )
+                    }bar"
+                )
+                .setOnlyAlertOnce(true)
+            val stackBuilder = TaskStackBuilder.create(context)
+            stackBuilder.addNextIntent(Intent(context, MainActivity::class.java))
+            // tu trzeba bedzie troce zmienic zeby nawigacja dzialala: https://proandroiddev.com/all-about-notifications-in-android-718961054961#:~:text=2%3A%20To%20start-,an,-activity%20that%20includes
+            val resultPendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
+            )
+            builder.setContentIntent(resultPendingIntent)
 
-        val builder = NotificationCompat.Builder(context, channelId)    // .setCategory(Notification.CATEGORY_STATUS)
-            .setSubText(if (bike.isPressureLow()) {context.getString(R.string.warning_icon)} else {null})
-            .setSmallIcon(R.drawable.ic_bike)
-            .setSilent(!bike.isPressureLow())
-            .setContentTitle(bike.name)
-            .setContentText("Rear: ${formatNullablePressure(bike.sensorRear.pressureBar)}bar, Front: ${formatNullablePressure(bike.sensorFront.pressureBar)}bar")
-            .setOnlyAlertOnce(true)
-        val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addNextIntent(Intent(context, MainActivity::class.java))
-        // tu trzeba bedzie troce zmienic zeby nawigacja dzialala: https://proandroiddev.com/all-about-notifications-in-android-718961054961#:~:text=2%3A%20To%20start-,an,-activity%20that%20includes
-        val resultPendingIntent = stackBuilder.getPendingIntent(
-            0,
-            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
-        )
-        builder.setContentIntent(resultPendingIntent)
-
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(bike.id, builder.build())
+            val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(bike.id, builder.build())
+        }
     }
 
     private fun isNotificationVisible(bike: Bike, context: Context): Boolean {
@@ -77,7 +86,7 @@ class MyNotificationManager(context: Context, channelName: String, channelDescri
         return false
     }
 
-    public fun resetState(bike: Bike) {
+    fun resetState(bike: Bike) {
         if (bike.notificationState == NotificationState.DISMISSED) {
             bike.notificationState = NotificationState.NOT_VISIBLE
         }

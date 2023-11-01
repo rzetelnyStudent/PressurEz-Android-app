@@ -36,7 +36,7 @@ object PermissionsHelper {
     fun isNeededNotGrantedBackgroundLoc(): String? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
              // As of version Q (10) we need FINE_LOCATION and BACKGROUND_LOCATION
-            return Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
         }
         else {
             null
@@ -83,9 +83,13 @@ object PermissionsHelper {
     fun allPermissionsGranted(context: Context, group: PermissionGroup): Boolean {
         val permissions = getListedRationalePermissions(group)
         val grantingInfo = ValidationInfo()
-        for (permission in permissions) {
-            grantingInfo.registerState(isPermissionGranted(context, permission))
+        return if (permissions.isNotEmpty()) {
+            for (permission in permissions) {
+                grantingInfo.registerState(isPermissionGranted(context, permission))
+            }
+            grantingInfo.isCorrect()
+        } else {
+            true
         }
-        return grantingInfo.isCorrect()
     }
 }
