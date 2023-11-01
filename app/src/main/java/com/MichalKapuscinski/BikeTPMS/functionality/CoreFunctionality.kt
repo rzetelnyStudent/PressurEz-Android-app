@@ -26,7 +26,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         super.onStart(owner)
         isForeground = true
         if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
-            bleScanner.stopBackgroundStartForegroundScan()
+            bleScanner.startForegroundScan()
         }
         //Log.d("aa", "onStart: $owner")
     }
@@ -54,8 +54,9 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         BeaconManager.setDebug(true)
         region = Region("all-beacons", null, null, null)
         bleScanner = BleScanner(beaconManager, region)
+        bleScanner.registerObservers(this.centralRangingObserver, this.centralMonitoringObserver)
         if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
-            bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
+            bleScanner.startBackgroundScan()
         }
     }
 
@@ -137,8 +138,7 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
 
     fun startScan() {
         bleScanner.stop()
-        bleScanner.startBackgroundScan(this.centralRangingObserver, this.centralMonitoringObserver)
-        bleScanner.stopBackgroundStartForegroundScan()
+        bleScanner.startForegroundScan()
     }
 
     companion object {
