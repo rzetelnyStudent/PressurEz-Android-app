@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.MichalKapuscinski.BikeTPMS.models.ValidationInfo
+import com.MichalKapuscinski.BikeTPMS.models.LatchedFalseBool
 
 object PermissionsHelper {
     // Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -82,7 +82,7 @@ object PermissionsHelper {
 
     fun allPermissionsGranted(context: Context, group: PermissionGroup): Boolean {
         val permissions = getListedRationalePermissions(group)
-        val grantingInfo = ValidationInfo()
+        val grantingInfo = LatchedFalseBool()
         return if (permissions.isNotEmpty()) {
             for (permission in permissions) {
                 grantingInfo.registerState(isPermissionGranted(context, permission))

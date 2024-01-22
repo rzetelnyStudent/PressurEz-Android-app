@@ -1,9 +1,7 @@
 package com.MichalKapuscinski.BikeTPMS
 
 import android.content.Intent
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
-import com.MichalKapuscinski.BikeTPMS.models.ValidationInfo
+import com.MichalKapuscinski.BikeTPMS.models.LatchedFalseBool
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionGroup
 import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -52,7 +50,7 @@ fun MainActivity.promptConditionallyForBackgroundLocation() {
 fun MainActivity.promptConditionallyForPermissions() {
     val notGrantedPermissions = PermissionsHelper.getNotGrantedRationalePermissions(this, PermissionGroup.ALL)
     if (notGrantedPermissions.isNotEmpty()) {
-        val showRationaleForAll = ValidationInfo()
+        val showRationaleForAll = LatchedFalseBool()
         for (permission in notGrantedPermissions) {
             showRationaleForAll.registerState(shouldShowRequestPermissionRationale(permission))
         }

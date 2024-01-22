@@ -1,6 +1,5 @@
 package com.MichalKapuscinski.BikeTPMS
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,8 +14,7 @@ import com.MichalKapuscinski.BikeTPMS.functionality.CoreFunctionality
 import com.MichalKapuscinski.BikeTPMS.models.Action
 import com.MichalKapuscinski.BikeTPMS.models.Bike
 import com.MichalKapuscinski.BikeTPMS.models.NavigationInfo
-import com.MichalKapuscinski.BikeTPMS.models.ValidationInfo
-import com.MichalKapuscinski.BikeTPMS.permissions.PermissionsHelper
+import com.MichalKapuscinski.BikeTPMS.models.LatchedFalseBool
 import com.MichalKapuscinski.BikeTPMS.ui.CardAdapter
 //import com.MichalKapuscinski.BikeTPMS.utility.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -50,7 +48,7 @@ class MainActivity : AppCompatActivity(), BikeClickListener {
         lifecycle.addObserver(coreFunctionality)
         requestPermissionsLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val allGranted = ValidationInfo()
+            val allGranted = LatchedFalseBool()
             for (permissionResult in permissions.values) {
                 allGranted.registerState(permissionResult)
             }
