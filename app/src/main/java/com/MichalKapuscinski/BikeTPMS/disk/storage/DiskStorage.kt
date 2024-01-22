@@ -15,9 +15,6 @@ class DiskStorage
 
     public fun readBikesFromDisk(): List<Bike> {
         return db.dao.selectBikes()
-        //bikeList.add(Bike(bikeList.size, "Test", R.drawable.ic_bike, 1, 4, 1000, 1000))
-        //bikeList.add(Bike(bikeList.size, "MTB", R.drawable.ic_bike, 1, 4, 1000, 1000))
-        //bikeList.add(Bike(bikeList.size, "SZOSa", R.drawable.ic_bike, 1, 4, 1000, 1000))
     }
 
     // remember to read bikes form disk after saving!!!

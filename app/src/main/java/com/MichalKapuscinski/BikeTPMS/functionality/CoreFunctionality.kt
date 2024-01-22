@@ -29,16 +29,11 @@ class CoreFunctionality: Application(), DefaultLifecycleObserver {
         if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
             bleScanner.startForegroundScan()
         }
-        //Log.d("aa", "onStart: $owner")
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         isForeground = false
-//        if (PermissionsHelper.allPermissionsGranted(this, PermissionGroup.SCANNING)) {
-//            bleScanner.stopForegroundStartBackgroundScan()
-//        }
-        //Log.d("aa", "onStop: $owner")
     }
 
     override fun onCreate() {
